@@ -20,6 +20,11 @@ declare global {
     song_id: string;
     created_at: Date;
   }
+
+  type BannerIcons = {
+    position: string;
+    icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>;
+  }
 };
 
 export { };

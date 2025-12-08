@@ -16,6 +16,7 @@ import { Drawer, DrawerTrigger, DrawerContent, DrawerClose, DrawerHeader } from 
 import { Search } from "lucide-react";
 import { Button } from "../ui/button";
 import { Popover, PopoverTrigger, PopoverContent } from "../ui/popover";
+import { Separator } from "../ui/separator";
 
 const Navbar = () => {
   const isMobile = useIsMobile();
@@ -46,7 +47,6 @@ const Navbar = () => {
                 </NavigationMenuItem>
               ))}
 
-              {/* Extra menu trigger for mobile to show a compact menu */}
               <NavigationMenuItem>
                 <NavigationMenuTrigger className="hidden md:inline-flex">More</NavigationMenuTrigger>
                 <NavigationMenuContent>
@@ -67,22 +67,16 @@ const Navbar = () => {
           </NavigationMenu>
         </nav>
 
-        {/* Right: Search + Avatar */}
-        {/* <div className="flex items-center gap-3">
-          <form className="hidden items-center gap-2 md:flex" onSubmit={(e) => e.preventDefault()}>
-            <input
-              aria-label="Search songs, artists, playlists"
-              placeholder="Search music..."
-              className="h-9 w-64 rounded-md border px-3 text-sm outline-none placeholder:text-muted-foreground/60"
-            />
-          </form>
+        <div className="hidden md:flex items-center gap-2">
+          <Link href="/profile" className="inline-flex items-center gap-4">
+            <div className="h-10 w-10 rounded-full bg-muted/50 flex items-center justify-center">
+              <span className="text-lg font-semibold text-neutral-400">VA</span>
+            </div>
+            <h1 className="text-md font-medium text-neutral-700">Valerie Attila Al-fath</h1>
+          </Link>
+        </div>
 
-          <div className="flex items-center gap-2">
-            <Link href="/profile" className="inline-flex items-center gap-2">
-              <div className="h-9 w-9 rounded-full bg-muted/30" />
-            </Link>
-          </div>
-        </div> */}
+        
         <div className="md:hidden flex items-center gap-2">
           <div className="">
             <Popover>
@@ -128,7 +122,7 @@ const Navbar = () => {
             </DrawerTrigger>
 
             <DrawerContent>
-              <DrawerHeader>
+              <DrawerHeader className="bg-accent">
                 <div className="flex items-center justify-between">
                   <Link href="/" className="flex items-center gap-2">
                     <div className="h-8 w-8 rounded-md bg-linear-to-br from-purple-500 to-pink-500" />
@@ -142,7 +136,20 @@ const Navbar = () => {
                     </button>
                   </DrawerClose>
                 </div>
+                <div className="bg-linear-to-br from-fuchsia-50 via-purple-50 to-sky-50 flex items-center gap-2 mt-4 rounded-lg p-4 border border-neutral-200 hover:shadow-md focus:shadow-md transition-all">
+                  <Link href="/profile" className="inline-flex items-center gap-4">
+                    <div className="h-10 w-10 rounded-full bg-muted/50 flex items-center justify-center">
+                      <span className="text-lg font-semibold text-neutral-400">VA</span>
+                    </div>
+                    <div className="">
+                      <h1 className="text-lg/4 font-medium text-neutral-700">Valerie Attila Al-fath</h1>
+                      <p className="text-sm font-thin text-neutral-600">ggwp123@gmail.com</p>
+                    </div>
+                  </Link>
+                </div>
               </DrawerHeader>
+
+              <Separator />
 
               <div className="p-4">
                 <ul className="flex flex-col gap-2">

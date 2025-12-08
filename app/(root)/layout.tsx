@@ -3,7 +3,7 @@ import React from "react";
 
 const layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <>
+    <div className="min-h-screen">
       {/* NAVBAR */}
       <Navbar />
 
@@ -11,7 +11,7 @@ const layout = ({ children }: { children: React.ReactNode }) => {
       <main className="p-6 sm:p-8 md:p-10">
         {children}
       </main>
-    </>
+    </div>
   );
 }
 
