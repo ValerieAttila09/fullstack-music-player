@@ -31,6 +31,11 @@ declare global {
     url: string;
     icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>;
   }
+
+  type ResponseData = {
+    error: boolean;
+    message: string
+  }
 };
 
 export { };

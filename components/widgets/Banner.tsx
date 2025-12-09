@@ -6,14 +6,25 @@ import Link from "next/link";
 
 const Banner = (): JSX.Element => {
   return (
-    <>
-      <div className="w-full relative flex justify-end">
-        <div className="inverted-radius-back max-w-xl w-full h-[430px] bg-neutral-300 p-px">
+    <div className="w-full grid md:grid-cols-2">
+      <div className="col-span-1">
+
+      </div>
+      <div className="col-span-1 relative flex justify-start">
+        <div className="relative inverted-radius-back max-w-xl w-full h-[430px] bg-neutral-300 p-px">
           <div className="inverted-radius-back w-full h-full bg-white p-1 flex items-center justify-center">
             <div className="inverted-radius overflow-hidden relative">
               <Image src={'/images/landing-image3.jpg'} alt="Landing Page Image" className="w-full h-full object-cover" width={600} height={600} />
             </div>
           </div>
+          {BannerIcons.map((icon, index) => {
+            const MusicIcon: ForwardRefExoticComponent<any> = icon.icon;
+            return (
+              <div key={index + 1} className={`absolute ${icon.position} rounded-full p-2 bg-linear-to-br from-blue-300/30 to-fuchsia-300/20 backdrop-blur-sm border border-fuchsia-300/30 flex items-center justify-center`}>
+                <MusicIcon className="w-5 h-5 text-fuchsia-200" />
+              </div>
+            );
+          })}
         </div>
         <div className="absolute bottom-8 left-8 w-[280px] h-auto p-6 bg-linear-to-br from-fuchsia-100/40 to-transparent backdrop-blur-sm rounded-3xl border border-neutral-300/50">
           <h1 className="text-transparent bg-clip-text font-semibold text-4xl bg-linear-to-r from-pink-400 via-fuchsia-200 to-blue-300">Lsten More</h1>
@@ -22,16 +33,8 @@ const Banner = (): JSX.Element => {
             <Button variant={'ghost'} className={"cursor-pointer text-lg text-fuchsia-200 bg-white/20 hover:bg-white/5 hover:text-fuchsia-400 border border-white/30 transition-all"}>Studio</Button>
           </Link>
         </div>
-        {BannerIcons.map((icon, index) => {
-          const MusicIcon: ForwardRefExoticComponent<any> = icon.icon;
-          return (
-            <div key={index + 1} className={`absolute ${icon.position} rounded-full p-2 bg-linear-to-br from-blue-300/30 to-fuchsia-300/20 backdrop-blur-sm border border-fuchsia-300/30 flex items-center justify-center`}>
-              <MusicIcon className="w-5 h-5 text-fuchsia-200" />
-            </div>
-          );
-        })}
       </div>
-    </>
+    </div>
   );
 }
 

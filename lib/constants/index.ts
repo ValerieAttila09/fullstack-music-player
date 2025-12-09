@@ -25,7 +25,7 @@ export const NavbarMenu = [
 
 export const BannerIcons: BannerIcons[] = [
   {
-    position: "top-6 right-12",
+    position: "top-10 right-16",
     icon: Music
   },
   {

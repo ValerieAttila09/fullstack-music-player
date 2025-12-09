@@ -22,7 +22,7 @@ const Navbar = () => {
   const isMobile = useIsMobile();
 
   return (
-    <header className="w-full border-b bg-background/60 backdrop-blur-sm">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/60 backdrop-blur-sm">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3">
         <div className="flex items-center gap-3">
           <Link href="/" className="flex items-center gap-2 no-underline">
