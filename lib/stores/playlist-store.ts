@@ -1,32 +1,5 @@
+import { PlaylistState } from '@/types/interfaces';
 import { create } from 'zustand';
-
-interface Playlist {
-  id: string;
-  name: string;
-  userId: string;
-  createdAt: Date;
-  songs?: Song[];
-}
-
-interface Song {
-  id: string;
-  title: string;
-  artist: string;
-  audioUrl: string;
-  duration: number;
-  coverUrl?: string;
-}
-
-interface PlaylistState {
-  playlists: Playlist[];
-  currentPlaylist: Playlist | null;
-  setPlaylists: (playlists: Playlist[]) => void;
-  addPlaylist: (playlist: Playlist) => void;
-  removePlaylist: (id: string) => void;
-  setCurrentPlaylist: (playlist: Playlist | null) => void;
-  addSongToPlaylist: (playlistId: string, song: Song) => void;
-  removeSongFromPlaylist: (playlistId: string, songId: string) => void;
-}
 
 export const usePlaylistStore = create<PlaylistState>((set) => ({
   playlists: [],

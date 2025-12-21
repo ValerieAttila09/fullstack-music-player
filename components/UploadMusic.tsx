@@ -6,16 +6,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Upload, Music } from "lucide-react";
-import { supabase } from "@/lib/supabase/supabase.client";
+import { createClient } from "@/lib/utils/supabase/supabase.client";
 import { useMusicStore } from "@/lib/stores/music-store";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { toast } from "sonner";
-
-interface UploadMusicProps {
-  onUploadComplete?: () => void;
-}
+import { UploadMusicProps } from "@/types/interfaces";
 
 export function UploadMusic({ onUploadComplete }: UploadMusicProps) {
+  
+  const supabase = createClient();
+  
   const [title, setTitle] = useState("");
   const [artist, setArtist] = useState("");
   const [audioFile, setAudioFile] = useState<File | null>(null);

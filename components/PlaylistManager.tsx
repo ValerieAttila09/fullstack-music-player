@@ -10,10 +10,12 @@ import { Plus, Trash2, Music } from "lucide-react";
 import { usePlaylistStore } from "@/lib/stores/playlist-store";
 import { useMusicStore } from "@/lib/stores/music-store";
 import { useAuthStore } from "@/lib/stores/auth-store";
-import { supabase } from "@/lib/supabase/supabase.client";
+import { createClient } from "@/lib/utils/supabase/supabase.client";
 import { toast } from "sonner";
 
 export function PlaylistManager() {
+  const supabase = createClient();
+  
   const [newPlaylistName, setNewPlaylistName] = useState("");
   const [isCreating, setIsCreating] = useState(false);
   const [selectedPlaylist, setSelectedPlaylist] = useState<string | null>(null);

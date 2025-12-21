@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Trash2, Play, Pause, Upload } from "lucide-react";
 import { useMusicStore } from "@/lib/stores/music-store";
 import { useAuthStore } from "@/lib/stores/auth-store";
-import { supabase } from "@/lib/supabase/supabase.client";
+import { supabase } from "@/lib/utils/supabase/supabase.server";
 import { UploadMusic } from "@/components/UploadMusic";
 import { toast } from "sonner";
 import Image from "next/image";

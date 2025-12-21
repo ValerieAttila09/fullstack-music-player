@@ -1,30 +1,5 @@
+import { MusicState } from '@/types/interfaces';
 import { create } from 'zustand';
-
-interface Song {
-  id: string;
-  title: string;
-  artist: string;
-  audioUrl: string;
-  duration: number;
-  coverUrl?: string;
-  uploadedBy?: string;
-  createdAt: Date;
-}
-
-interface MusicState {
-  songs: Song[];
-  currentSong: Song | null;
-  isPlaying: boolean;
-  volume: number;
-  currentTime: number;
-  setSongs: (songs: Song[]) => void;
-  addSong: (song: Song) => void;
-  removeSong: (id: string) => void;
-  setCurrentSong: (song: Song | null) => void;
-  setIsPlaying: (playing: boolean) => void;
-  setVolume: (volume: number) => void;
-  setCurrentTime: (time: number) => void;
-}
 
 export const useMusicStore = create<MusicState>((set) => ({
   songs: [],

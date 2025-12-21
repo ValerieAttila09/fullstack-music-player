@@ -1,22 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { authClient } from '@/lib/auth-client';
-
-interface User {
-  id: string;
-  email: string;
-  fullName?: string;
-  avatarUrl?: string;
-}
-
-interface AuthState {
-  user: User | null;
-  isLoading: boolean;
-  setUser: (user: User | null) => void;
-  setLoading: (loading: boolean) => void;
-  logout: () => void;
-  initialize: () => void;
-}
+import { AuthState } from '@/types/interfaces';
 
 export const useAuthStore = create<AuthState>()(
   persist(

@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase/supabase.client';
+import { supabase } from '@/lib/utils/supabase/supabase.server';
 
 export const authClient = {
   signIn: {
