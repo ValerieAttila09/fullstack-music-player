@@ -11,6 +11,7 @@ import { createClient } from "@/lib/utils/supabase/supabase.client";
 import { UploadMusic } from "@/components/UploadMusic";
 import { toast } from "sonner";
 import Image from "next/image";
+import { Song } from "@/types/interfaces";
 
 export default function SongsPage() {
   const supabase = createClient();
@@ -21,7 +22,7 @@ export default function SongsPage() {
   const loadSongs = useCallback(async () => {
     if (!user) return;
 
-    const { data, error } = await supabase
+    const { data: songData, error } = await supabase
       .from('songs')
       .select('*')
       .eq('uploaded_by', user.id)
@@ -29,10 +30,34 @@ export default function SongsPage() {
 
     if (error) {
       console.error(error);
+      toast.error("Failed to load songs");
       return;
     }
 
-    setSongs(data);
+    const transformedSongs: Song[] = await Promise.all(
+      songData.map(async (song) => {
+        const { data: signedUrlData } = await supabase.storage
+          .from('audio')
+          .createSignedUrl(song.audio_url, 3600); 
+          
+        const signedCoverUrlData = song.cover_url
+          ? await supabase.storage.from('audio').createSignedUrl(song.cover_url, 3600)
+          : { data: null };
+
+        return {
+          id: song.id,
+          title: song.title,
+          artist: song.artist,
+          audioUrl: signedUrlData?.signedUrl || '',
+          coverUrl: signedCoverUrlData?.data?.signedUrl || '',
+          duration: song.duration,
+          uploadedBy: song.uploaded_by,
+          createdAt: song.created_at,
+        };
+      })
+    );
+
+    setSongs(transformedSongs);
   }, [user, setSongs, supabase]);
 
   useEffect(() => {
@@ -58,7 +83,7 @@ export default function SongsPage() {
     }
   };
 
-  const handlePlaySong = (song: typeof songs[number]) => {
+  const handlePlaySong = (song: Song) => {
     if (currentSong?.id === song.id) {
       setIsPlaying(!isPlaying);
     } else {
@@ -68,89 +93,91 @@ export default function SongsPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">My Songs</h1>
-          <p className="text-muted-foreground">Manage your music collection</p>
-        </div>
-        <Button onClick={() => setShowUpload(!showUpload)}>
-          <Upload className="w-4 h-4 mr-2" />
-          {showUpload ? "Hide Upload" : "Upload Music"}
-        </Button>
-      </div>
-
-      {showUpload && (
-        <UploadMusic onUploadComplete={loadSongs} />
-      )}
-
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {songs.map((song) => (
-          <Card key={song.id} className="group hover:shadow-lg transition-shadow">
-            <CardContent className="p-4">
-              <div className="flex items-start gap-3">
-                <div className="relative">
-                  {song.coverUrl ? (
-                    <Image
-                      src={song.coverUrl}
-                      alt={song.title}
-                      width={64}
-                      height={64}
-                      className="rounded-md object-cover"
-                    />
-                  ) : (
-                    <div className="w-16 h-16 bg-muted rounded-md flex items-center justify-center">
-                      <span className="text-2xl">🎵</span>
-                    </div>
-                  )}
-                  <Button
-                    size="sm"
-                    className="absolute inset-0 w-full h-full opacity-0 group-hover:opacity-100 transition-opacity"
-                    onClick={() => handlePlaySong(song)}
-                  >
-                    {currentSong?.id === song.id && isPlaying ? (
-                      <Pause className="w-6 h-6" />
-                    ) : (
-                      <Play className="w-6 h-6" />
-                    )}
-                  </Button>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold truncate">{song.title}</h3>
-                  <p className="text-sm text-muted-foreground truncate">{song.artist}</p>
-                  <div className="flex items-center gap-2 mt-2">
-                    <Badge variant="secondary" className="text-xs">
-                      {Math.floor(song.duration / 60)}:{(song.duration % 60).toString().padStart(2, '0')}
-                    </Badge>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleDeleteSong(song.id)}
-                      className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {songs.length === 0 && (
-        <div className="text-center py-12">
-          <div className="text-6xl mb-4">🎵</div>
-          <h3 className="text-xl font-semibold mb-2">No songs yet</h3>
-          <p className="text-muted-foreground mb-4">
-            Upload your first song to get started
-          </p>
-          <Button onClick={() => setShowUpload(true)}>
+    <section className="p-6">
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold">My Songs</h1>
+            <p className="text-muted-foreground">Manage your music collection</p>
+          </div>
+          <Button onClick={() => setShowUpload(!showUpload)}>
             <Upload className="w-4 h-4 mr-2" />
-            Upload Music
+            {showUpload ? "Hide Upload" : "Upload Music"}
           </Button>
         </div>
-      )}
-    </div>
+
+        {showUpload && (
+          <UploadMusic onUploadComplete={loadSongs} />
+        )}
+
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {songs.map((song) => (
+            <Card key={song.id} className="group hover:shadow-lg transition-shadow">
+              <CardContent className="p-4">
+                <div className="flex items-start gap-3">
+                  <div className="relative">
+                    {song.coverUrl ? (
+                      <Image
+                        src={song.coverUrl}
+                        alt={song.title}
+                        width={64}
+                        height={64}
+                        className="rounded-md object-cover"
+                      />
+                    ) : (
+                      <div className="w-16 h-16 bg-muted rounded-md flex items-center justify-center">
+                        <span className="text-2xl">🎵</span>
+                      </div>
+                    )}
+                    <Button
+                      size="sm"
+                      className="absolute inset-0 w-full h-full opacity-0 group-hover:opacity-100 transition-opacity"
+                      onClick={() => handlePlaySong(song)}
+                    >
+                      {currentSong?.id === song.id && isPlaying ? (
+                        <Pause className="w-6 h-6" />
+                      ) : (
+                        <Play className="w-6 h-6" />
+                      )}
+                    </Button>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold truncate">{song.title}</h3>
+                    <p className="text-sm text-muted-foreground truncate">{song.artist}</p>
+                    <div className="flex items-center gap-2 mt-2">
+                      <Badge variant="secondary" className="text-xs">
+                        {Math.floor(song.duration / 60)}:{(song.duration % 60).toString().padStart(2, '0')}
+                      </Badge>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDeleteSong(song.id)}
+                        className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {songs.length === 0 && (
+          <div className="text-center py-12">
+            <div className="text-6xl mb-4">🎵</div>
+            <h3 className="text-xl font-semibold mb-2">No songs yet</h3>
+            <p className="text-muted-foreground mb-4">
+              Upload your first song to get started
+            </p>
+            <Button onClick={() => setShowUpload(true)}>
+              <Upload className="w-4 h-4 mr-2" />
+              Upload Music
+            </Button>
+          </div>
+        )}
+      </div>
+    </section>
   );
 }

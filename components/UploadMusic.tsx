@@ -10,7 +10,7 @@ import { createClient } from "@/lib/utils/supabase/supabase.client";
 import { useMusicStore } from "@/lib/stores/music-store";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { toast } from "sonner";
-import { UploadMusicProps } from "@/types/interfaces";
+import { UploadMusicProps, Song } from "@/types/interfaces";
 
 export function UploadMusic({ onUploadComplete }: UploadMusicProps) {
   
@@ -26,6 +26,16 @@ export function UploadMusic({ onUploadComplete }: UploadMusicProps) {
 
   const { addSong } = useMusicStore();
   const { user } = useAuthStore();
+
+  const getAudioDuration = (file: File): Promise<number> => {
+    return new Promise((resolve) => {
+      const audio = document.createElement('audio');
+      audio.src = URL.createObjectURL(file);
+      audio.onloadedmetadata = () => {
+        resolve(audio.duration);
+      };
+    });
+  };
 
   const handleAudioFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -60,35 +70,24 @@ export function UploadMusic({ onUploadComplete }: UploadMusicProps) {
 
     setIsUploading(true);
     try {
-      // Upload audio file
-      const audioPath = `audio/${user.id}/${Date.now()}-${audioFile.name}`;
-      await uploadFile(audioFile, 'music', audioPath);
+      const duration = await getAudioDuration(audioFile);
+      const audioPath = `${user.id}/${Date.now()}-${audioFile.name}`;
+      await uploadFile(audioFile, 'audio', audioPath);
 
-      // Upload cover file if provided
       let coverPath = null;
       if (coverFile) {
-        coverPath = `covers/${user.id}/${Date.now()}-${coverFile.name}`;
-        await uploadFile(coverFile, 'music', coverPath);
+        coverPath = `${user.id}/${Date.now()}-${coverFile.name}`;
+        await uploadFile(coverFile, 'audio', coverPath);
       }
 
-      // Get public URLs
-      const { data: audioUrl } = supabase.storage
-        .from('music')
-        .getPublicUrl(audioPath);
-
-      const coverUrl = coverPath ? supabase.storage
-        .from('music')
-        .getPublicUrl(coverPath).data.publicUrl : null;
-
-      // Create song record in database
-      const { data: song, error } = await supabase
+      const { data: newSongData, error } = await supabase
         .from('songs')
         .insert({
           title,
           artist,
-          audio_url: audioUrl.publicUrl,
-          cover_url: coverUrl,
-          duration: 0, // We'll calculate this later
+          audio_url: audioPath,
+          cover_url: coverPath,
+          duration: Math.round(duration),
           uploaded_by: user.id,
         })
         .select()
@@ -96,10 +95,22 @@ export function UploadMusic({ onUploadComplete }: UploadMusicProps) {
 
       if (error) throw error;
 
-      // Add to local store
-      addSong(song);
+      const { data: signedUrlData } = await supabase.storage.from('audio').createSignedUrl(newSongData.audio_url, 3600);
+      const signedCoverUrlData = newSongData.cover_url ? await supabase.storage.from('audio').createSignedUrl(newSongData.cover_url, 3600) : { data: null };
 
-      // Reset form
+      const transformedSong: Song = {
+        id: newSongData.id,
+        title: newSongData.title,
+        artist: newSongData.artist,
+        audioUrl: signedUrlData?.signedUrl || '',
+        coverUrl: signedCoverUrlData?.data?.signedUrl || '',
+        duration: newSongData.duration,
+        uploadedBy: newSongData.uploaded_by,
+        createdAt: newSongData.created_at
+      };
+
+      addSong(transformedSong);
+
       setTitle("");
       setArtist("");
       setAudioFile(null);

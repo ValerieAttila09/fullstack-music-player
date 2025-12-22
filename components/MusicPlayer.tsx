@@ -24,10 +24,12 @@ export function MusicPlayer() {
   const [isRepeated, setIsRepeated] = useState(false);
 
   const {
+    songs,
     currentSong,
     isPlaying,
     volume,
     currentTime,
+    setCurrentSong,
     setIsPlaying,
     setVolume,
     setCurrentTime
@@ -41,8 +43,8 @@ export function MusicPlayer() {
 
   useEffect(() => {
     if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.play();
+      if (isPlaying && currentSong?.audioUrl) {
+        audioRef.current.play().catch(e => console.error("Error playing audio:", e));
       } else {
         audioRef.current.pause();
       }
@@ -57,11 +59,12 @@ export function MusicPlayer() {
 
   const handleLoadedMetadata = () => {
     if (audioRef.current) {
-      // Update duration in store if needed
+      // Duration is now correctly sourced from the database
     }
   };
 
   const handlePlayPause = () => {
+    if (!currentSong) return;
     setIsPlaying(!isPlaying);
   };
 
@@ -72,6 +75,7 @@ export function MusicPlayer() {
   };
 
   const handleTimeChange = (value: number[]) => {
+    if (!currentSong) return;
     const newTime = value[0];
     setCurrentTime(newTime);
     if (audioRef.current) {
@@ -86,30 +90,49 @@ export function MusicPlayer() {
     }
   };
 
-  const handlePrevious = () => {
-    // Implement previous song logic
-  };
+  const handleNextPrev = (direction: 'next' | 'prev') => {
+    if (!currentSong || songs.length === 0) return;
 
-  const handleNext = () => {
-    // Implement next song logic
-  };
+    const currentIndex = songs.findIndex(song => song.id === currentSong.id);
+    if (currentIndex === -1) return;
+
+    let nextIndex;
+
+    if (isShuffled) {
+      nextIndex = Math.floor(Math.random() * songs.length);
+      if (songs.length > 1 && nextIndex === currentIndex) {
+        nextIndex = (currentIndex + 1) % songs.length;
+      }
+    } else {
+      if (direction === 'next') {
+        nextIndex = (currentIndex + 1) % songs.length;
+      } else {
+        nextIndex = (currentIndex - 1 + songs.length) % songs.length;
+      }
+    }
+    
+    setCurrentSong(songs[nextIndex]);
+    setIsPlaying(true);
+  }
+
+  const handleSongEnd = () => {
+    if (isRepeated && audioRef.current) {
+      audioRef.current.currentTime = 0;
+      audioRef.current.play();
+    } else {
+      handleNextPrev('next');
+    }
+  }
 
   const formatTime = (time: number) => {
+    if (isNaN(time) || time === 0) return "0:00";
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
   if (!currentSong) {
-    return (
-      <Card className="fixed bottom-0 left-0 right-0 z-50">
-        <CardContent className="p-4">
-          <div className="text-center text-muted-foreground">
-            No song selected
-          </div>
-        </CardContent>
-      </Card>
-    );
+    return null;
   }
 
   return (
@@ -117,14 +140,13 @@ export function MusicPlayer() {
       <CardContent className="p-4">
         <audio
           ref={audioRef}
-          src={currentSong.audioUrl}
+          src={currentSong.audioUrl || ''}
           onTimeUpdate={handleTimeUpdate}
           onLoadedMetadata={handleLoadedMetadata}
-          onEnded={() => setIsPlaying(false)}
+          onEnded={handleSongEnd}
         />
 
         <div className="flex items-center gap-4">
-          {/* Song Info */}
           <div className="flex items-center gap-3 min-w-0 flex-1">
             {currentSong.coverUrl && (
               <Image
@@ -141,7 +163,6 @@ export function MusicPlayer() {
             </div>
           </div>
 
-          {/* Controls */}
           <div className="flex flex-col items-center gap-2 flex-1 max-w-md">
             <div className="flex items-center gap-2">
               <Button
@@ -152,13 +173,13 @@ export function MusicPlayer() {
               >
                 <Shuffle className="w-4 h-4" />
               </Button>
-              <Button variant="ghost" size="sm" onClick={handlePrevious}>
+              <Button variant="ghost" size="sm" onClick={() => handleNextPrev('prev')}>
                 <SkipBack className="w-4 h-4" />
               </Button>
               <Button onClick={handlePlayPause}>
                 {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
               </Button>
-              <Button variant="ghost" size="sm" onClick={handleNext}>
+              <Button variant="ghost" size="sm" onClick={() => handleNextPrev('next')}>
                 <SkipForward className="w-4 h-4" />
               </Button>
               <Button
@@ -171,7 +192,6 @@ export function MusicPlayer() {
               </Button>
             </div>
 
-            {/* Progress Bar */}
             <div className="flex items-center gap-2 w-full">
               <span className="text-xs text-muted-foreground w-10 text-right">
                 {formatTime(currentTime)}
@@ -189,7 +209,6 @@ export function MusicPlayer() {
             </div>
           </div>
 
-          {/* Volume */}
           <div className="flex items-center gap-2 min-w-0 flex-1 justify-end">
             <Button variant="ghost" size="sm" onClick={handleMute}>
               {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}

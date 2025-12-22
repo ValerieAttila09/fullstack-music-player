@@ -19,7 +19,7 @@ const StudioNavbar = () => {
   };
 
   return (
-    <div className="w-full p-2 flex items-center justify-between border-b border-b-accent">
+    <div className="w-full p-2 flex items-center justify-between border-b border-b-neutral-200">
       <SidebarTrigger variant={'outline'} size={'icon-sm'} />
       <div className="flex items-center gap-2">
         <Popover>
