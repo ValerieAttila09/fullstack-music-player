@@ -137,7 +137,7 @@ export function MusicPlayer() {
 
   return (
     <Card className="fixed bottom-0 left-0 right-0 z-50">
-      <CardContent className="p-4">
+      <CardContent className="p-2">
         <audio
           ref={audioRef}
           src={currentSong.audioUrl || ''}
@@ -154,7 +154,7 @@ export function MusicPlayer() {
                 alt={currentSong.title}
                 width={48}
                 height={48}
-                className="rounded-md object-cover"
+                className="  object-cover"
               />
             )}
             <div className="min-w-0 flex-1">

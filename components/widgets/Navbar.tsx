@@ -26,7 +26,7 @@ const Navbar = () => {
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3">
         <div className="flex items-center gap-3">
           <Link href="/" className="flex items-center gap-2 no-underline">
-            <div className="h-8 w-8 rounded-md bg-linear-to-br from-purple-500 to-pink-500 shadow-sm" />
+            <div className="h-8 w-8   bg-linear-to-br from-purple-500 to-pink-500 shadow-sm" />
             <span className="text-lg font-semibold">MusicPlayer</span>
           </Link>
         </div>
@@ -39,7 +39,7 @@ const Navbar = () => {
                   <NavigationMenuLink asChild>
                     <Link
                       href={item.href}
-                      className="rounded-md px-3 py-2 text-sm font-medium text-foreground/90 hover:bg-muted/30"
+                      className="  px-3 py-2 text-sm font-medium text-foreground/90 hover:bg-muted/30"
                     >
                       {item.label}
                     </Link>
@@ -54,7 +54,7 @@ const Navbar = () => {
                     {NavbarMenu.map((item) => (
                       <li key={item.href}>
                         <NavigationMenuLink asChild>
-                          <Link href={item.href} className="block rounded-md px-3 py-2 text-sm">
+                          <Link href={item.href} className="block   px-3 py-2 text-sm">
                             {item.label}
                           </Link>
                         </NavigationMenuLink>
@@ -95,7 +95,7 @@ const Navbar = () => {
                     <input
                       aria-label="Search songs, artists, playlists"
                       placeholder="Search music..."
-                      className="h-9 w-64 rounded-md border px-3 text-sm outline-none placeholder:text-muted-foreground/60"
+                      className="h-9 w-64   border px-3 text-sm outline-none placeholder:text-muted-foreground/60"
                     />
                     <Button
                       variant={'outline'}
@@ -113,7 +113,7 @@ const Navbar = () => {
               <Button
                 aria-label="Open menu"
                 variant={'outline'}
-                className="inline-flex items-center justify-center rounded-md p-2 text-foreground/90"
+                className="inline-flex items-center justify-center   p-2 text-foreground/90"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
@@ -125,7 +125,7 @@ const Navbar = () => {
               <DrawerHeader className="bg-accent">
                 <div className="flex items-center justify-between">
                   <Link href="/" className="flex items-center gap-2">
-                    <div className="h-8 w-8 rounded-md bg-linear-to-br from-purple-500 to-pink-500" />
+                    <div className="h-8 w-8   bg-linear-to-br from-purple-500 to-pink-500" />
                     <span className="font-semibold">MusicPlayer</span>
                   </Link>
                   <DrawerClose asChild>
@@ -155,7 +155,7 @@ const Navbar = () => {
                 <ul className="flex flex-col gap-2">
                   {NavbarMenu.map((item) => (
                     <li key={item.href}>
-                      <Link href={item.href} className="block rounded-md px-3 py-2 border border-transparent text-base font-medium focus:shadow-sm focus:border-neutral-200 transition-shadow">
+                      <Link href={item.href} className="block   px-3 py-2 border border-transparent text-base font-medium focus:shadow-sm focus:border-neutral-200 transition-shadow">
                         {item.label}
                       </Link>
                     </li>

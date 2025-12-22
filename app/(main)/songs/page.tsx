@@ -122,10 +122,10 @@ export default function SongsPage() {
                         alt={song.title}
                         width={64}
                         height={64}
-                        className="rounded-md object-cover"
+                        className="  object-cover"
                       />
                     ) : (
-                      <div className="w-16 h-16 bg-muted rounded-md flex items-center justify-center">
+                      <div className="w-16 h-16 bg-muted   flex items-center justify-center">
                         <span className="text-2xl">🎵</span>
                       </div>
                     )}

@@ -20,12 +20,12 @@ const StudioNavbar = () => {
 
   return (
     <div className="w-full p-2 flex items-center justify-between border-b border-b-neutral-200">
-      <SidebarTrigger variant={'outline'} size={'icon-sm'} />
+      <SidebarTrigger variant={'outline'} size={'lg'} />
       <div className="flex items-center gap-2">
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant={'outline'} size={'icon-sm'}>
-              <Search className="w-5 h-5 text-neutral-800" />
+            <Button variant={'outline'} size={'icon-lg'}>
+              <Search className="w-7 h-7 text-neutral-800" />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="min-w-sm me-2">
@@ -38,7 +38,7 @@ const StudioNavbar = () => {
                 <input
                   aria-label="Search songs, artists, playlists"
                   placeholder="Search music..."
-                  className="h-9 w-full rounded-md border px-3 text-sm outline-none placeholder:text-muted-foreground/60"
+                  className="h-9 w-full   border px-3 text-sm outline-none placeholder:text-muted-foreground/60"
                 />
                 <Button
                   variant={'outline'}
@@ -52,8 +52,8 @@ const StudioNavbar = () => {
         </Popover>
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant={'outline'} size={'icon-sm'}>
-              <User2 className="w-5 h-5 text-neutral-800" />
+            <Button variant={'outline'} size={'icon-lg'}>
+              <User2 className="w-7 h-7 text-neutral-800" />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-48">
