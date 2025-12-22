@@ -1,4 +1,6 @@
-import { supabase } from '@/lib/utils/supabase/supabase.server';
+import { createClient } from "./utils/supabase/supabase.client";
+
+const supabase = createClient();
 
 export const authClient = {
   signIn: {
