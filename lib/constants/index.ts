@@ -19,5 +19,5 @@ export const StudioSidebarMenu: StudioSidebarMenu[] = [
   { title: "Studio", url: "/studio", icon: HomeIcon },
   { title: "Songs", url: "/songs", icon: Music },
   { title: "Playlists", url: "/playlists", icon: Folder },
-  { title: "Settings", url: "/", icon: Cog },
+  { title: "Settings", url: "/settings", icon: Cog },
 ];

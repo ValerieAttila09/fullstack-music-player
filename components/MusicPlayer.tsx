@@ -137,7 +137,7 @@ export function MusicPlayer() {
 
   return (
     <Card className="fixed bottom-0 left-0 right-0 z-50">
-      <CardContent className="p-2">
+      <CardContent className="px-6">
         <audio
           ref={audioRef}
           src={currentSong.audioUrl || ''}
@@ -166,25 +166,25 @@ export function MusicPlayer() {
           <div className="flex flex-col items-center gap-2 flex-1 max-w-md">
             <div className="flex items-center gap-2">
               <Button
-                variant="ghost"
-                size="sm"
+                variant={'outline'}
+                size={'icon-lg'}
                 onClick={() => setIsShuffled(!isShuffled)}
                 className={isShuffled ? "text-primary" : ""}
               >
                 <Shuffle className="w-4 h-4" />
               </Button>
-              <Button variant="ghost" size="sm" onClick={() => handleNextPrev('prev')}>
+              <Button variant={'outline'} size={'icon-lg'} onClick={() => handleNextPrev('prev')}>
                 <SkipBack className="w-4 h-4" />
               </Button>
               <Button onClick={handlePlayPause}>
                 {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
               </Button>
-              <Button variant="ghost" size="sm" onClick={() => handleNextPrev('next')}>
+              <Button variant={'outline'} size={'icon-lg'} onClick={() => handleNextPrev('next')}>
                 <SkipForward className="w-4 h-4" />
               </Button>
               <Button
-                variant="ghost"
-                size="sm"
+                variant={'outline'}
+                size={'icon-lg'}
                 onClick={() => setIsRepeated(!isRepeated)}
                 className={isRepeated ? "text-primary" : ""}
               >
@@ -210,7 +210,7 @@ export function MusicPlayer() {
           </div>
 
           <div className="flex items-center gap-2 min-w-0 flex-1 justify-end">
-            <Button variant="ghost" size="sm" onClick={handleMute}>
+            <Button variant={'outline'} size={'icon-lg'} onClick={handleMute}>
               {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
             </Button>
             <Slider

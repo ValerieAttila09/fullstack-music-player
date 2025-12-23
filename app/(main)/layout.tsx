@@ -1,6 +1,6 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/widgets/AppSidebar";
-import StudioNavbar from "@/components/widgets/StudioNavbar";
+import { StudioNavbar } from "@/components/widgets/StudioNavbar";
 import React from "react";
 import { MusicPlayer } from "@/components/MusicPlayer";
 

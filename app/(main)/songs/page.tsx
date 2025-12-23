@@ -8,14 +8,13 @@ import { Trash2, Play, Pause, Upload } from "lucide-react";
 import { useMusicStore } from "@/lib/stores/music-store";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { createClient } from "@/lib/utils/supabase/supabase.client";
-import { UploadMusic } from "@/components/UploadMusic";
 import { toast } from "sonner";
 import Image from "next/image";
 import { Song } from "@/types/interfaces";
+import { UploadMusicDrawer } from "@/components/widgets/UploadMusicDrawer"; // 1. Import komponen baru
 
 export default function SongsPage() {
   const supabase = createClient();
-  const [showUpload, setShowUpload] = useState(false);
   const { songs, setSongs, removeSong, setCurrentSong, setIsPlaying, currentSong, isPlaying } = useMusicStore();
   const { user } = useAuthStore();
 
@@ -38,8 +37,8 @@ export default function SongsPage() {
       songData.map(async (song) => {
         const { data: signedUrlData } = await supabase.storage
           .from('audio')
-          .createSignedUrl(song.audio_url, 3600); 
-          
+          .createSignedUrl(song.audio_url, 3600); // 1 hour expiry
+
         const signedCoverUrlData = song.cover_url
           ? await supabase.storage.from('audio').createSignedUrl(song.cover_url, 3600)
           : { data: null };
@@ -49,7 +48,7 @@ export default function SongsPage() {
           title: song.title,
           artist: song.artist,
           audioUrl: signedUrlData?.signedUrl || '',
-          coverUrl: signedCoverUrlData?.data?.signedUrl || '',
+          coverUrl: signedCoverUrlData?.data?.signedUrl || null,
           duration: song.duration,
           uploadedBy: song.uploaded_by,
           createdAt: song.created_at,
@@ -100,15 +99,11 @@ export default function SongsPage() {
             <h1 className="text-3xl font-bold">My Songs</h1>
             <p className="text-muted-foreground">Manage your music collection</p>
           </div>
-          <Button onClick={() => setShowUpload(!showUpload)}>
-            <Upload className="w-4 h-4 mr-2" />
-            {showUpload ? "Hide Upload" : "Upload Music"}
-          </Button>
+          {/* 2. Ganti tombol lama dengan komponen Drawer */}
+          <UploadMusicDrawer onUploadComplete={loadSongs} />
         </div>
 
-        {showUpload && (
-          <UploadMusic onUploadComplete={loadSongs} />
-        )}
+        {/* 3. Hapus logika showUpload dan komponen UploadMusic lama */}
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {songs.map((song) => (
@@ -122,10 +117,10 @@ export default function SongsPage() {
                         alt={song.title}
                         width={64}
                         height={64}
-                        className="  object-cover"
+                        className="rounded-md object-cover"
                       />
                     ) : (
-                      <div className="w-16 h-16 bg-muted   flex items-center justify-center">
+                      <div className="w-16 h-16 bg-muted rounded-md flex items-center justify-center">
                         <span className="text-2xl">🎵</span>
                       </div>
                     )}
@@ -171,10 +166,8 @@ export default function SongsPage() {
             <p className="text-muted-foreground mb-4">
               Upload your first song to get started
             </p>
-            <Button onClick={() => setShowUpload(true)}>
-              <Upload className="w-4 h-4 mr-2" />
-              Upload Music
-            </Button>
+            {/* Tombol upload di sini juga bisa menggunakan Drawer jika diinginkan */}
+             <UploadMusicDrawer onUploadComplete={loadSongs} />
           </div>
         )}
       </div>

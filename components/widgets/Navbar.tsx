@@ -136,7 +136,7 @@ const Navbar = () => {
                     </button>
                   </DrawerClose>
                 </div>
-                <div className="bg-linear-to-br from-fuchsia-50 via-purple-50 to-sky-50 flex items-center gap-2 mt-4 rounded-lg p-4 border border-neutral-200 hover:shadow-md focus:shadow-md transition-all">
+                <div className="bg-linear-to-br from-fuchsia-50 via-purple-50 to-sky-50 flex items-center gap-2 mt-4 rounded-none p-4 border border-neutral-200 hover:shadow-md focus:shadow-md transition-all">
                   <Link href="/profile" className="inline-flex items-center gap-4">
                     <div className="h-10 w-10 rounded-full bg-muted/50 flex items-center justify-center">
                       <span className="text-lg font-semibold text-neutral-400">VA</span>
