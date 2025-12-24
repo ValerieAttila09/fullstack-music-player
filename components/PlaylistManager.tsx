@@ -110,7 +110,7 @@ export function PlaylistManager() {
 
       if (error) throw error;
 
-      const song = songs.find(s => s.id === songId);
+      const song = songs.find((s: { id: string; }) => s.id === songId);
       if (song) {
         addSongToPlaylist(playlistId, song);
         toast.success("Song added to playlist!");

@@ -4,17 +4,11 @@ import { useEffect, useState, useCallback } from 'react';
 import { createClient } from '@/lib/utils/supabase/supabase.client';
 import { useAuthStore } from '@/lib/stores/auth-store';
 import { toast } from 'sonner';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ListMusic, Trash2 } from 'lucide-react';
 import { CreatePlaylistDrawer } from '@/components/widgets/CreatePlaylistDrawer';
-
-interface Playlist {
-  id: string;
-  name: string;
-  description: string | null;
-  created_at: string;
-}
+import { Playlist } from '@/types/interfaces';
 
 export default function PlaylistsPage() {
   const supabase = createClient();
@@ -36,7 +30,7 @@ export default function PlaylistsPage() {
       console.error('Error fetching playlists:', error);
       toast.error('Failed to load playlists.');
     } else {
-      setPlaylists(data);
+      setPlaylists(data as any);
     }
     setLoading(false);
   }, [user, supabase]);
@@ -85,7 +79,7 @@ export default function PlaylistsPage() {
               <Card key={playlist.id} className="group relative">
                 <CardHeader>
                   <CardTitle className="truncate">{playlist.name}</CardTitle>
-                  <CardDescription className="h-10 overflow-hidden text-ellipsis">{playlist.description || 'No description'}</CardDescription>
+                  {/* Removed CardDescription */}
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center justify-between text-sm text-muted-foreground">

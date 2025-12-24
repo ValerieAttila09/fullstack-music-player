@@ -64,6 +64,7 @@ declare global {
     variant: 'primary' | 'dark' | 'secondary';
     size: 'lg' | 'md';
     className?: string;
+    children: ReactNode;
   } & Omit<React.ComponentPropsWithoutRef<T>, 'as' | 'variant' | 'size' | 'className'>;
 };
 

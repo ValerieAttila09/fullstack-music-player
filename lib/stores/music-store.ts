@@ -1,19 +1,43 @@
-import { MusicState } from '@/types/interfaces';
 import { create } from 'zustand';
+import { MusicStore, Playlist, Song } from '@/types/interfaces';
 
-export const useMusicStore = create<MusicState>((set) => ({
+export const useMusicStore = create<MusicStore>((set) => ({
   songs: [],
+  playlists: [],
   currentSong: null,
   isPlaying: false,
-  volume: 1,
-  currentTime: 0,
-  setSongs: (songs) => set({ songs }),
-  addSong: (song) => set((state) => ({ songs: [...state.songs, song] })),
-  removeSong: (id) => set((state) => ({
-    songs: state.songs.filter(song => song.id !== id)
+  volume: 1,       // Restored
+  currentTime: 0, // Restored
+
+  // Song-related actions
+  setSongs: (songs: Song[]) => set({ songs }),
+  addSong: (song: Song) => set((state) => ({ songs: [...state.songs, song] })),
+  removeSong: (songId: string) => set((state) => ({ 
+    songs: state.songs.filter(song => song.id !== songId) 
   })),
-  setCurrentSong: (song) => set({ currentSong: song }),
-  setIsPlaying: (playing) => set({ isPlaying: playing }),
-  setVolume: (volume) => set({ volume }),
-  setCurrentTime: (time) => set({ currentTime: time }),
+
+  // Playlist-related actions
+  setPlaylists: (playlists: Playlist[]) => set({ playlists }),
+  addPlaylist: (playlist: Playlist) => set((state) => ({ 
+    playlists: [...state.playlists, playlist] 
+  })),
+  removePlaylist: (playlistId: string) => set((state) => ({ 
+    playlists: state.playlists.filter(p => p.id !== playlistId) 
+  })),
+  addSongToPlaylist: (playlistId: string, song: Song) => set((state) => ({
+    playlists: state.playlists.map(p => 
+      p.id === playlistId ? { ...p, songs: [...p.songs, song] } : p
+    ),
+  })),
+  removeSongFromPlaylist: (playlistId: string, songId: string) => set((state) => ({
+    playlists: state.playlists.map(p => 
+      p.id === playlistId ? { ...p, songs: p.songs.filter(s => s.id !== songId) } : p
+    ),
+  })),
+
+  // Playback control actions
+  setCurrentSong: (song: Song | null) => set({ currentSong: song }),
+  setIsPlaying: (isPlaying: boolean) => set({ isPlaying }),
+  setVolume: (volume: number) => set({ volume }),             // Restored
+  setCurrentTime: (time: number) => set({ currentTime: time }), // Restored
 }));

@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { ArrowRight, Upload, ListMusic, PlayCircle } from 'lucide-react';
 import SoundWave from '@/components/widgets/SoundWave';
 import clsx from 'clsx';
-import { FeatureCardProps, StepProps } from '@/types/interfaces';
+import { FeatureCardProps, StepProps, ButtonProps } from '@/types/interfaces';
 
 const AnimatedSection = ({ children, className }: { children: React.ReactNode, className?: string }) => {
   const ref = useRef(null);
@@ -48,11 +48,12 @@ export default function HomePage() {
             The ultimate platform to upload, organize, and experience your personal music collection like never before.
           </p>
           <div className="mt-8 flex justify-center gap-4">
+            {/* FIX: Removed as="a" from Button */}
             <Link href="/sign-up" passHref>
-              <Button as="a" size="lg" variant="primary">Get Started</Button>
+              <Button size="lg" variant="primary">Get Started</Button>
             </Link>
             <Link href="/sign-in" passHref>
-              <Button as="a" size="lg" variant="secondary">Sign In</Button>
+              <Button size="lg" variant="secondary">Sign In</Button>
             </Link>
           </div>
         </motion.div>
@@ -108,8 +109,9 @@ export default function HomePage() {
               Join now and start building your personal soundscape.
             </p>
             <div className="mt-8">
+              {/* FIX: Removed as="a" from Button */}
               <Link href="/sign-up" passHref>
-                <Button as="a" size="lg" variant="dark">Sign Up for Free <ArrowRight className='w-4 h-4 ml-2' /></Button>
+                <Button size="lg" variant="dark">Sign Up for Free <ArrowRight className='w-4 h-4 ml-2' /></Button>
               </Link>
             </div>
           </div>

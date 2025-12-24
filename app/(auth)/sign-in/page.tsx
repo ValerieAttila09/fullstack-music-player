@@ -49,7 +49,7 @@ export default function SignInPage() {
   };
 
   return (
-    <Card clas>
+    <Card className="">
       <CardHeader>
         <CardTitle>Sign In</CardTitle>
         <CardDescription>

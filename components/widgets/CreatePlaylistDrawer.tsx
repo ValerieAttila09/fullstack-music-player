@@ -1,75 +1,67 @@
 'use client';
 
-import * as React from "react";
+import { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { Plus } from "lucide-react";
-import { CreatePlaylistForm } from "@/components/CreatePlaylistForm";
-import { useMediaQuery } from "@/lib/hooks/use-media-query";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger, DrawerFooter, DrawerClose } from "@/components/ui/drawer";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { createClient } from '@/lib/utils/supabase/supabase.client';
+import { useAuthStore } from '@/lib/stores/auth-store';
+import { toast } from 'sonner';
 
-interface CreatePlaylistDrawerProps {
-    onCreateComplete?: () => void;
-}
+export function CreatePlaylistDrawer({ onCreateComplete }: { onCreateComplete: () => void }) {
+  const supabase = createClient();
+  const { user } = useAuthStore();
+  const [playlistName, setPlaylistName] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
 
-export function CreatePlaylistDrawer({ onCreateComplete }: CreatePlaylistDrawerProps) {
-  const [open, setOpen] = React.useState(false);
-  const isDesktop = useMediaQuery("(min-width: 768px)");
+  const handleCreatePlaylist = async () => {
+    if (!playlistName.trim() || !user) return;
 
-  const handleCreateComplete = () => {
-    setOpen(false); // Close the drawer/sheet on completion
-    onCreateComplete?.();
+    const { error } = await supabase
+      .from('playlists')
+      .insert({ 
+        name: playlistName,
+        user_id: user.id
+       });
+
+    if (error) {
+      console.error("Error creating playlist:", error);
+      toast.error('Failed to create playlist.');
+    } else {
+      toast.success('Playlist created successfully!');
+      setPlaylistName('');
+      onCreateComplete(); // Refresh the list
+      setIsOpen(false); // Close the drawer
+    }
   };
 
-  const title = "Create a new playlist";
-
-  if (isDesktop) {
-    return (
-      <Sheet open={open} onOpenChange={setOpen}>
-        <SheetTrigger asChild>
-          <Button>
-            <Plus className="w-4 h-4 mr-2" />
-            New Playlist
-          </Button>
-        </SheetTrigger>
-        <SheetContent className="sm:max-w-md p-0">
-          <SheetHeader className="p-6">
-            <SheetTitle>{title}</SheetTitle>
-          </SheetHeader>
-          <div className="p-6 border-t">
-            <CreatePlaylistForm onCreateComplete={handleCreateComplete} />
-          </div>
-        </SheetContent>
-      </Sheet>
-    );
-  }
-
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
+    <Drawer open={isOpen} onOpenChange={setIsOpen}>
       <DrawerTrigger asChild>
-          <Button>
-            <Plus className="w-4 h-4 mr-2" />
-            New Playlist
-          </Button>
+        <Button>+ New Playlist</Button>
       </DrawerTrigger>
       <DrawerContent>
-        <DrawerHeader className="text-left">
-          <DrawerTitle>{title}</DrawerTitle>
-        </DrawerHeader>
-        <div className="p-4">
-          <CreatePlaylistForm onCreateComplete={handleCreateComplete} />
+        <div className="mx-auto w-full max-w-sm">
+          <DrawerHeader>
+            <DrawerTitle>Create a New Playlist</DrawerTitle>
+          </DrawerHeader>
+          <div className="p-4 pb-0">
+            <div className="space-y-2">
+              <Label htmlFor="name">Playlist Name</Label>
+              <Input 
+                id="name" 
+                value={playlistName}
+                onChange={(e) => setPlaylistName(e.target.value)} 
+              />
+            </div>
+          </div>
+          <DrawerFooter>
+            <Button onClick={handleCreatePlaylist}>Create Playlist</Button>
+            <DrawerClose asChild>
+              <Button variant="outline">Cancel</Button>
+            </DrawerClose>
+          </DrawerFooter>
         </div>
       </DrawerContent>
     </Drawer>
