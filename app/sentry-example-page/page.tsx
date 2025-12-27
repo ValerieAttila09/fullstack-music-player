@@ -53,7 +53,7 @@ export default function Page() {
           <a
             target="_blank"
             rel="noopener"
-            href="https://valerie-attila-alfath.sentry.io/issues/?project=4510607477375056"
+            href={process.env.NEXT_PUBLIC_SENTRY_ISSUES_URL}
           >
             Issues Page
           </a>
