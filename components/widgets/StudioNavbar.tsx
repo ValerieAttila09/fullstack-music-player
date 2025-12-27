@@ -53,13 +53,13 @@ export default function StudioNavbar() {
         </header>
         <DrawerContent>
           <DrawerHeader>
-            <DrawerTitle>Are you absolutely sure?</DrawerTitle>
-            <DrawerDescription>This action cannot be undone.</DrawerDescription>
+            <DrawerTitle>{user?.fullName || 'User Profile'}</DrawerTitle>
+            <DrawerDescription>{user?.email}</DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
-            <Button>Submit</Button>
-            <DrawerClose className="cursor-pointer">
-              <span className="">Close</span>
+            <Button onClick={handleSignOut} variant='outline'>Sign Out</Button>
+            <DrawerClose asChild>
+              <Button variant="ghost">Cancel</Button>
             </DrawerClose>
           </DrawerFooter>
         </DrawerContent>
