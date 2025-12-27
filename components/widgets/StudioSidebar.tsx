@@ -33,7 +33,7 @@ const navLinks = [
 ];
 
 export function StudioSidebar() {
-  const pathname = usePathname(); // 2. Dapatkan pathname
+  const pathname = usePathname();
 
   return (
     <div className="w-64 bg-neutral-900 text-white p-4 flex flex-col">
@@ -43,7 +43,6 @@ export function StudioSidebar() {
       <nav className="flex-1">
         <ul className="space-y-2">
           {navLinks.map((link) => {
-            // 3. Cek apakah link sedang aktif
             const isActive = pathname === link.href;
             return (
               <li key={link.name}>
@@ -51,7 +50,7 @@ export function StudioSidebar() {
                   href={link.href}
                   className={`flex items-center gap-3 p-3 rounded-md transition-colors ${ 
                     isActive 
-                      ? "bg-neutral-800 text-white"  // 4. Terapkan kelas jika aktif
+                      ? "bg-neutral-800 text-white"
                       : "hover:bg-neutral-700"
                   }`}>
                   <link.icon className="w-5 h-5" />

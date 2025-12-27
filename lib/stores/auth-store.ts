@@ -1,49 +1,40 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { authClient } from '@/lib/auth-client';
-import { AuthState } from '@/types/interfaces';
+import { AuthState, User } from '@/types/interfaces';
 
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
       user: null,
       isLoading: true,
-      setUser: (user) => set({ user }),
-      setLoading: (loading) => set({ isLoading: loading }),
+      setUser: (user: User | null) => set({ user }),
+      setLoading: (loading: boolean) => set({ isLoading: loading }),
       // Fungsi baru untuk membersihkan state saja
-      clearAuth: () => set({ user: null, isLoading: false }), 
+      clearAuth: () => set({ user: null, isLoading: false }),
       logout: async () => {
         await authClient.signOut();
         set({ user: null });
       },
       initialize: () => {
+        const mapUser = (supabaseUser: any) => ({
+          id: supabaseUser.id,
+          email: supabaseUser.email || '',
+          fullName: supabaseUser.user_metadata?.full_name,
+          avatarUrl: supabaseUser.user_metadata?.avatar_url,
+        });
+
         // Check initial session
         authClient.getSession().then(({ data }) => {
           if (data?.user) {
-            set({
-              user: {
-                id: data.user.id,
-                email: data.user.email || '',
-                fullName: data.user.user_metadata?.full_name,
-                avatarUrl: data.user.user_metadata?.avatar_url,
-              }
-            });
+            set({ user: mapUser(data.user) });
           }
           set({ isLoading: false });
         });
 
-        // Listen for auth changes
-        authClient.onAuthStateChange((_event, session) => {
-          if (session?.user) {
-            const user = session.user;
-            set({
-              user: {
-                id: user.id,
-                email: user.email || '',
-                fullName: user.user_metadata?.full_name,
-                avatarUrl: user.user_metadata?.avatar_url,
-              }
-            });
+        authClient.onAuthStateChange((user) => {
+          if (user) {
+            set({ user: mapUser(user) });
           } else {
             set({ user: null });
           }

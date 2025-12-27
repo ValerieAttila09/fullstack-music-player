@@ -28,11 +28,11 @@ export interface MusicStore {
     setSongs: (songs: Song[]) => void;
     addSong: (song: Song) => void;
     removeSong: (songId: string) => void;
-    
+
     setPlaylists: (playlists: Playlist[]) => void;
     addPlaylist: (playlist: Playlist) => void;
     removePlaylist: (playlistId: string) => void;
-    
+
     setCurrentSong: (song: Song | null) => void;
     setIsPlaying: (isPlaying: boolean) => void;
     setVolume: (volume: number) => void;
@@ -55,8 +55,19 @@ export interface AuthState {
     setUser: (user: User | null) => void;
     setLoading: (loading: boolean) => void;
     clearAuth: () => void;
-    logout: () => void;
+    logout: () => Promise<void>;
     initialize: () => void;
+}
+
+export interface PlaylistState {
+    playlists: Playlist[];
+    currentPlaylist: Playlist | null;
+    setPlaylists: (playlists: Playlist[]) => void;
+    addPlaylist: (playlist: Playlist) => void;
+    removePlaylist: (id: string) => void;
+    setCurrentPlaylist: (playlist: Playlist | null) => void;
+    addSongToPlaylist: (playlistId: string, song: Song) => void;
+    removeSongFromPlaylist: (playlistId: string, songId: string) => void;
 }
 
 export interface UploadMusicProps {
@@ -80,4 +91,4 @@ export type ButtonProps<T extends React.ElementType> = {
     size: 'lg' | 'md';
     className?: string;
     children: ReactNode;
-  } & Omit<React.ComponentPropsWithoutRef<T>, 'as' | 'variant' | 'size' | 'className' | 'children'>;
+} & Omit<React.ComponentPropsWithoutRef<T>, 'as' | 'variant' | 'size' | 'className' | 'children'>;
