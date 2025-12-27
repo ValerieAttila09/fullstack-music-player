@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer"
+import { Input } from "../ui/input";
 
 
 export default function StudioNavbar() {
@@ -38,9 +39,8 @@ export default function StudioNavbar() {
   return (
     <>
       <Drawer direction="right">
-        <header className="fixed top-0 z-5 w-full bg-white/20 backdrop-blur-xs inset-x-0 flex items-center justify-between p-4 border-b border-accent">
-          <div />
-          <div className="flex items-center gap-4">
+        <header className="fixed top-0 z-5 w-full bg-white/20 backdrop-blur-xs inset-x-0 flex items-center justify-end p-4 border-b border-accent">
+          <div className="flex items-center justify-end gap-4">
             <DrawerTrigger className="flex items-center gap-2 cursor-pointer">
               <Avatar>
                 <AvatarImage src={user?.avatarUrl} />
@@ -48,7 +48,6 @@ export default function StudioNavbar() {
               </Avatar>
               <span className="text-white text-md font-medium">{user?.fullName}</span>
             </DrawerTrigger>
-            {/* <Button onClick={handleSignOut} variant='outline'>Sign Out</Button> */}
           </div>
         </header>
         <DrawerContent>

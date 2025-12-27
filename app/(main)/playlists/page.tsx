@@ -67,7 +67,7 @@ export default function PlaylistsPage() {
         {loading ? (
           <p>Loading...</p>
         ) : playlists.length === 0 ? (
-          <div className="text-center py-12 border-2 border-dashed rounded-lg">
+          <div className="text-center py-12 border-2 border-dashed">
             <div className="text-6xl mb-4">🎧</div>
             <h3 className="text-xl font-semibold mb-2">No Playlists Created Yet</h3>
             <p className="text-muted-foreground mb-4">Create your first playlist to organize your songs.</p>

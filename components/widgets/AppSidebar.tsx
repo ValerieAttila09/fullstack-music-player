@@ -1,8 +1,20 @@
 'use client';
 
-import React from 'react';
-import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '../ui/sidebar'
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarSeparator
+} from '../ui/sidebar'
 import { StudioSidebarMenu } from '@/lib/constants'
+import { User2Icon } from 'lucide-react';
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -30,7 +42,7 @@ const AppSidebar = () => {
                     <SidebarMenuButton className={`${buttonActiveClass}`} asChild size={'lg'}>
                       <Link href={menu.url}>
                         <SidebarIcon className={`w-6 h-6 ${iconAtiveClass}`} />
-                        <span className='text-lg outfit-regular'>{menu.title}</span>
+                        <span className='text-lg font-normal'>{menu.title}</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -39,9 +51,26 @@ const AppSidebar = () => {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        <SidebarGroup />
-        <SidebarGroup />
       </SidebarContent>
+      <SidebarSeparator />
+      <SidebarFooter>
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton className='' asChild size={'lg'}>
+                    <Link href={"/profile"}>
+                      <User2Icon className='w-6 h-6 text-neutral-800'/>
+                      <span className="text-lg font-normal">Profile</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
+      </SidebarFooter>
     </Sidebar>
   )
 }

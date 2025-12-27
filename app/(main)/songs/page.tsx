@@ -4,7 +4,7 @@ import { useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Trash2, Play, Pause } from "lucide-react";
+import { Trash2, Play, Pause, ListMusicIcon, Grid, Grid2X2 } from "lucide-react";
 import { useMusicStore } from "@/lib/stores/music-store";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { createClient } from "@/lib/utils/supabase/supabase.client";
@@ -12,8 +12,15 @@ import { toast } from "sonner";
 import Image from "next/image";
 import { Song } from "@/types/interfaces";
 import { UploadMusicDrawer } from "@/components/widgets/UploadMusicDrawer"; // 1. Import komponen baru
+import { Separator } from "@/components/ui/separator";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { VisibilityButton } from "@/lib/constants";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function SongsPage() {
+
+  const isMobile = useIsMobile();
+
   const supabase = createClient();
   const { songs, setSongs, removeSong, setCurrentSong, setIsPlaying, currentSong, isPlaying } = useMusicStore();
   const { user } = useAuthStore();
@@ -37,7 +44,7 @@ export default function SongsPage() {
       songData.map(async (song) => {
         const { data: signedUrlData } = await supabase.storage
           .from('audio')
-          .createSignedUrl(song.audio_url, 3600); // 1 hour expiry
+          .createSignedUrl(song.audio_url, 3600);
 
         const signedCoverUrlData = song.cover_url
           ? await supabase.storage.from('audio').createSignedUrl(song.cover_url, 3600)
@@ -99,12 +106,31 @@ export default function SongsPage() {
             <h1 className="text-3xl font-bold">My Songs</h1>
             <p className="text-muted-foreground">Manage your music collection</p>
           </div>
-          {/* 2. Ganti tombol lama dengan komponen Drawer */}
           <UploadMusicDrawer onUploadComplete={loadSongs} />
         </div>
-
-        {/* 3. Hapus logika showUpload dan komponen UploadMusic lama */}
-
+        <Separator />
+        {!isMobile && (
+          <div className="space-y-2">
+            <p className="text-base font-regular text-muted-foreground">Change visibility</p>
+            <div className="w-full flex items-center jusitfy-start gap-2">
+              {VisibilityButton.map(({ tooltipLabel, icon }) => {
+                const VisibilityIcon = icon;
+                return (
+                  <Tooltip delayDuration={200} key={tooltipLabel}>
+                    <TooltipTrigger asChild>
+                      <Button variant={'outline'} size={'icon-lg'}>
+                        <VisibilityIcon className="w-8 h-8 text-neutral-700" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p className="text-sm text-neutral-600">{tooltipLabel}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                );
+              })}
+            </div>
+          </div>
+        )}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {songs.map((song) => (
             <Card key={song.id} className="group hover:shadow-lg transition-shadow">
@@ -117,10 +143,10 @@ export default function SongsPage() {
                         alt={song.title}
                         width={64}
                         height={64}
-                        className="rounded-md object-cover"
+                        className="object-cover"
                       />
                     ) : (
-                      <div className="w-16 h-16 bg-muted rounded-md flex items-center justify-center">
+                      <div className="w-16 h-16 bg-muted flex items-center justify-center">
                         <span className="text-2xl">🎵</span>
                       </div>
                     )}
@@ -166,8 +192,7 @@ export default function SongsPage() {
             <p className="text-muted-foreground mb-4">
               Upload your first song to get started
             </p>
-            {/* Tombol upload di sini juga bisa menggunakan Drawer jika diinginkan */}
-             <UploadMusicDrawer onUploadComplete={loadSongs} />
+            <UploadMusicDrawer onUploadComplete={loadSongs} />
           </div>
         )}
       </div>

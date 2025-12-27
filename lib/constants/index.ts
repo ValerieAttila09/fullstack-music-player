@@ -1,4 +1,4 @@
-import { Cog, Folder, HomeIcon, Music, Music2, Music3, Music4 } from "lucide-react";
+import { Cog, Folder, Grid, Grid2X2, Heart, Home, HomeIcon, ListMusic, ListMusicIcon, Mic2, Music, Music2, Music3, Music4 } from "lucide-react";
 
 export const NavbarMenu = [
   { label: "Home", href: "/home" },
@@ -20,4 +20,18 @@ export const StudioSidebarMenu: StudioSidebarMenu[] = [
   { title: "Songs", url: "/songs", icon: Music },
   { title: "Playlists", url: "/playlists", icon: Folder },
   { title: "Settings", url: "/settings", icon: Cog },
+];
+
+export const VisibilityButton: VisibilityButton[] = [
+  { tooltipLabel: "Change musics display to list", icon: ListMusicIcon },
+  { tooltipLabel: "Change musics display to 3x3 grid", icon: Grid },
+  { tooltipLabel: "Change musics display to 2x2 grid", icon: Grid2X2 },
+]
+
+export const navLinks: SidebarMenuLinks[] = [
+  { name: "Home", href: "/", icon: Home },
+  { name: "Songs", href: "/songs", icon: Music },
+  { name: "Artists", href: "/artists", icon: Mic2 },
+  { name: "Favorites", href: "/favorites", icon: Heart },
+  { name: "Playlists", href: "/playlists", icon: ListMusic }
 ];

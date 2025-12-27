@@ -8,7 +8,7 @@ const Studio = () => {
   return (
     <main className="w-full h-full">
       {/* === Header Section === */}
-      <header className="relative overflow-hidden w-full h-100 flex items-center justify-between">
+      {/* <header className="relative overflow-hidden w-full h-100 flex items-center justify-between">
         <Image
           src={'/images/studio-background-3.jpg'}
           alt="Studio Background"
@@ -17,7 +17,7 @@ const Studio = () => {
           className="absolute inset-0"
         />
         <StudioNavbar/>
-      </header>
+      </header> */}
 
       {/* === Main Content Section === */}
       {/* Using Flexbox for responsive layout */}

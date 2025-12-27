@@ -59,6 +59,17 @@ declare global {
     data?: { artists?: Artist[] } | null;
   } | null;
 
+  type VisibilityButton = {
+    tooltipLabel: string;
+    icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>;
+  }
+
+  type SidebarMenuLinks = {
+    name: string;
+    href: string;
+    icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>;
+  }
+
   type ButtonProps<T extends React.ElementType> = {
     as?: T;
     variant: 'primary' | 'dark' | 'secondary';

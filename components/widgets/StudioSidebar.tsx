@@ -1,36 +1,8 @@
 'use client';
 
+import { navLinks } from "@/lib/constants";
 import Link from "next/link";
-import { Music, Mic2, Heart, ListMusic, Home } from "lucide-react";
-import { usePathname } from "next/navigation"; // 1. Import usePathname
-
-const navLinks = [
-  {
-    name: "Home",
-    href: "/",
-    icon: Home
-  },
-  {
-    name: "Songs",
-    href: "/songs",
-    icon: Music
-  },
-  {
-    name: "Artists",
-    href: "/artists",
-    icon: Mic2
-  },
-  {
-    name: "Favorites",
-    href: "/favorites",
-    icon: Heart
-  },
-  {
-    name: "Playlists",
-    href: "/playlists",
-    icon: ListMusic
-  }
-];
+import { usePathname } from "next/navigation";
 
 export function StudioSidebar() {
   const pathname = usePathname();
