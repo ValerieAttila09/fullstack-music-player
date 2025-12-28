@@ -12,25 +12,28 @@ export const useMusicStore = create<MusicStore>((set) => ({
   // Song-related actions
   setSongs: (songs: Song[]) => set({ songs }),
   addSong: (song: Song) => set((state) => ({ songs: [...state.songs, song] })),
-  removeSong: (songId: string) => set((state) => ({ 
-    songs: state.songs.filter(song => song.id !== songId) 
+  updateSong: (updatedSong: Song) => set((state) => ({
+    songs: state.songs.map(song => song.id === updatedSong.id ? updatedSong : song)
+  })),
+  removeSong: (songId: string) => set((state) => ({
+    songs: state.songs.filter(song => song.id !== songId)
   })),
 
   // Playlist-related actions
   setPlaylists: (playlists: Playlist[]) => set({ playlists }),
-  addPlaylist: (playlist: Playlist) => set((state) => ({ 
-    playlists: [...state.playlists, playlist] 
+  addPlaylist: (playlist: Playlist) => set((state) => ({
+    playlists: [...state.playlists, playlist]
   })),
-  removePlaylist: (playlistId: string) => set((state) => ({ 
-    playlists: state.playlists.filter(p => p.id !== playlistId) 
+  removePlaylist: (playlistId: string) => set((state) => ({
+    playlists: state.playlists.filter(p => p.id !== playlistId)
   })),
   addSongToPlaylist: (playlistId: string, song: Song) => set((state) => ({
-    playlists: state.playlists.map(p => 
+    playlists: state.playlists.map(p =>
       p.id === playlistId ? { ...p, songs: [...p.songs, song] } : p
     ),
   })),
   removeSongFromPlaylist: (playlistId: string, songId: string) => set((state) => ({
-    playlists: state.playlists.map(p => 
+    playlists: state.playlists.map(p =>
       p.id === playlistId ? { ...p, songs: p.songs.filter(s => s.id !== songId) } : p
     ),
   })),

@@ -30,6 +30,7 @@ export default function PlaylistsPage() {
       console.error('Error fetching playlists:', error);
       toast.error('Failed to load playlists.');
     } else {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       setPlaylists(data as any);
     }
     setLoading(false);
@@ -79,13 +80,12 @@ export default function PlaylistsPage() {
               <Card key={playlist.id} className="group relative">
                 <CardHeader>
                   <CardTitle className="truncate">{playlist.name}</CardTitle>
-                  {/* Removed CardDescription */}
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center justify-between text-sm text-muted-foreground">
                     <div className='flex items-center'>
                         <ListMusic className="w-4 h-4 mr-2"/>
-                        <span>0 songs</span> { /* Placeholder */}
+                        <span>0 songs</span>
                     </div>
                     <Button 
                         variant='ghost' 

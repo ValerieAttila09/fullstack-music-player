@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { createClient } from '@/lib/utils/supabase/supabase.client';
 import { useAuthStore } from '@/lib/stores/auth-store';
 import { toast } from 'sonner';
+import { Separator } from '../ui/separator';
 
 export function CreatePlaylistDrawer({ onCreateComplete }: { onCreateComplete: () => void }) {
   const supabase = createClient();
@@ -20,10 +21,10 @@ export function CreatePlaylistDrawer({ onCreateComplete }: { onCreateComplete: (
 
     const { error } = await supabase
       .from('playlists')
-      .insert({ 
+      .insert({
         name: playlistName,
         user_id: user.id
-       });
+      });
 
     if (error) {
       console.error("Error creating playlist:", error);
@@ -31,13 +32,13 @@ export function CreatePlaylistDrawer({ onCreateComplete }: { onCreateComplete: (
     } else {
       toast.success('Playlist created successfully!');
       setPlaylistName('');
-      onCreateComplete(); // Refresh the list
-      setIsOpen(false); // Close the drawer
+      onCreateComplete();
+      setIsOpen(false);
     }
   };
 
   return (
-    <Drawer open={isOpen} onOpenChange={setIsOpen}>
+    <Drawer direction={'right'} open={isOpen} onOpenChange={setIsOpen}>
       <DrawerTrigger asChild>
         <Button>+ New Playlist</Button>
       </DrawerTrigger>
@@ -46,13 +47,14 @@ export function CreatePlaylistDrawer({ onCreateComplete }: { onCreateComplete: (
           <DrawerHeader>
             <DrawerTitle>Create a New Playlist</DrawerTitle>
           </DrawerHeader>
+          <Separator className='my-2' />
           <div className="p-4 pb-0">
             <div className="space-y-2">
               <Label htmlFor="name">Playlist Name</Label>
-              <Input 
-                id="name" 
+              <Input
+                id="name"
                 value={playlistName}
-                onChange={(e) => setPlaylistName(e.target.value)} 
+                onChange={(e) => setPlaylistName(e.target.value)}
               />
             </div>
           </div>

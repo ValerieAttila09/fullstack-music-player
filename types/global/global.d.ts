@@ -3,10 +3,11 @@ declare global {
     id: string;
     title: string;
     artist: string;
-    audio_url: string;
     duration: number;
-    cover_url: string;
-    created_at: Date;
+    audioUrl: string;
+    coverUrl: string | null;
+    uploadedBy: string;
+    createdAt: string;
   }
 
   type Playlist = {
