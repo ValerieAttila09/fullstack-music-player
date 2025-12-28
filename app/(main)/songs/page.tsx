@@ -60,15 +60,16 @@ export default function SongsPage() {
         .from("playlists")
         .select("name, user_id");
       
-      setPlaylist(playlists);
-
       if (error) {
-      console.error(error);
-      toast.error("Failed to load songs");
-      return;
-    }
+        console.error(error);
+        toast.error("Failed to load playlists");
+        return;
+      }
+      
+      setPlaylist(playlists);
     } catch (err) {
-      throw err
+      console.error(err);
+      toast.error("Failed to load playlists");
     }
   }
 
