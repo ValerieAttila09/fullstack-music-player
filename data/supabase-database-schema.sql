@@ -31,6 +31,7 @@ CREATE TABLE public.playlist_songs (
   playlist_id uuid NOT NULL,
   song_id uuid NOT NULL,
   created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT playlist_songs_pkey PRIMARY KEY (id),
   CONSTRAINT playlist_songs_playlist_id_fkey FOREIGN KEY (playlist_id) REFERENCES public.playlists(id),
   CONSTRAINT playlist_songs_song_id_fkey FOREIGN KEY (song_id) REFERENCES public.songs(id)
 );
