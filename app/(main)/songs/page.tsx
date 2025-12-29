@@ -62,13 +62,13 @@ export default function SongsPage() {
         .from("playlists")
         .select("name, user_id")
         .eq('user_id', user.id)
-      
+
       if (error) {
         console.error(error);
         toast.error("Failed to load playlists");
         return;
       }
-      
+
       setPlaylist(playlists);
     } catch (err) {
       console.error(err);
@@ -93,12 +93,16 @@ export default function SongsPage() {
 
     const transformedSongs: Song[] = await Promise.all(
       songData.map(async (song) => {
-        const { data: signedUrlData } = await supabase.storage
+        console.log('Processing song:', song.title, 'Audio URL:', song.audio_url);
+
+        const { data: signedUrlData, error: audioError } = await supabase.storage
           .from('audio')
           .createSignedUrl(song.audio_url, 3600);
 
+        console.log('Signed URL result:', signedUrlData, 'Error:', audioError);
+
         const signedCoverUrlData = song.cover_url
-          ? await supabase.storage.from('audio').createSignedUrl(song.cover_url, 3600)
+          ? await supabase.storage.from('cover').createSignedUrl(song.cover_url, 3600)
           : { data: null };
 
         return {

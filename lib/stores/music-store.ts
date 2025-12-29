@@ -1,13 +1,17 @@
 import { create } from 'zustand';
 import { MusicStore, Playlist, Song } from '@/types/interfaces';
+import { createClient } from '@/lib/utils/supabase/supabase.client';
+import { useAuthStore } from './auth-store';
 
-export const useMusicStore = create<MusicStore>((set) => ({
+const supabase = createClient();
+
+export const useMusicStore = create<MusicStore>((set, get) => ({
   songs: [],
   playlists: [],
   currentSong: null,
   isPlaying: false,
-  volume: 1,       // Restored
-  currentTime: 0, // Restored
+  volume: 1,
+  currentTime: 0,
 
   // Song-related actions
   setSongs: (songs: Song[]) => set({ songs }),
@@ -39,8 +43,21 @@ export const useMusicStore = create<MusicStore>((set) => ({
   })),
 
   // Playback control actions
-  setCurrentSong: (song: Song | null) => set({ currentSong: song }),
+  setCurrentSong: (song: Song | null) => {
+    set({ currentSong: song });
+    if (song) {
+      // Track play when song is set
+      const user = useAuthStore.getState().user;
+      if (user) {
+        // Fire-and-forget - don't block UI
+        supabase.from('listening_history').insert({
+          user_id: user.id,
+          song_id: song.id,
+        }).then(null, (error) => console.error('Error tracking play:', error));
+      }
+    }
+  },
   setIsPlaying: (isPlaying: boolean) => set({ isPlaying }),
-  setVolume: (volume: number) => set({ volume }),             // Restored
-  setCurrentTime: (time: number) => set({ currentTime: time }), // Restored
+  setVolume: (volume: number) => set({ volume }),
+  setCurrentTime: (time: number) => set({ currentTime: time }),
 }));

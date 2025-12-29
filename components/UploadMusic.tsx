@@ -13,9 +13,9 @@ import { toast } from "sonner";
 import { UploadMusicProps, Song } from "@/types/interfaces";
 
 export function UploadMusic({ onUploadComplete }: UploadMusicProps) {
-  
+
   const supabase = createClient();
-  
+
   const [title, setTitle] = useState("");
   const [artist, setArtist] = useState("");
   const [audioFile, setAudioFile] = useState<File | null>(null);
@@ -70,16 +70,27 @@ export function UploadMusic({ onUploadComplete }: UploadMusicProps) {
 
     setIsUploading(true);
     try {
+      console.log("Starting upload process...");
       const duration = await getAudioDuration(audioFile);
+      console.log("Audio duration:", duration);
+
       const audioPath = `${user.id}/${Date.now()}-${audioFile.name}`;
+      console.log("Audio path:", audioPath);
+
+      console.log("Uploading audio file...");
       await uploadFile(audioFile, 'audio', audioPath);
+      console.log("Audio upload successful");
 
       let coverPath = null;
       if (coverFile) {
         coverPath = `${user.id}/${Date.now()}-${coverFile.name}`;
-        await uploadFile(coverFile, 'audio', coverPath);
+        console.log("Cover path:", coverPath);
+        console.log("Uploading cover file...");
+        await uploadFile(coverFile, 'cover', coverPath);
+        console.log("Cover upload successful");
       }
 
+      console.log("Inserting song data to database...");
       const { data: newSongData, error } = await supabase
         .from('songs')
         .insert({
@@ -93,10 +104,20 @@ export function UploadMusic({ onUploadComplete }: UploadMusicProps) {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error("Database insert error:", error);
+        throw error;
+      }
 
+      console.log("Song data inserted:", newSongData);
+      console.log("Audio URL in database:", newSongData.audio_url);
+
+      console.log("Creating signed URLs...");
       const { data: signedUrlData } = await supabase.storage.from('audio').createSignedUrl(newSongData.audio_url, 3600);
-      const signedCoverUrlData = newSongData.cover_url ? await supabase.storage.from('audio').createSignedUrl(newSongData.cover_url, 3600) : { data: null };
+      console.log("Signed URL data:", signedUrlData);
+
+      const signedCoverUrlData = newSongData.cover_url ? await supabase.storage.from('cover').createSignedUrl(newSongData.cover_url, 3600) : { data: null };
+      console.log("Signed cover URL data:", signedCoverUrlData);
 
       const transformedSong: Song = {
         id: newSongData.id,
@@ -121,7 +142,8 @@ export function UploadMusic({ onUploadComplete }: UploadMusicProps) {
       toast.success("Song uploaded successfully!");
       onUploadComplete?.();
     } catch (error) {
-      console.error(error);
+      console.error("Upload failed:", error);
+      console.error("Error details:", JSON.stringify(error, null, 2));
       toast.error("Failed to upload song");
     } finally {
       setIsUploading(false);

@@ -111,8 +111,8 @@ export interface EditSongProps {
 }
 
 export interface EditPlaylistProps {
-  playlist: Playlist | null;
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
-  onEditComplete?: () => void;
+	playlist: Playlist | null;
+	isOpen: boolean;
+	onOpenChange: (open: boolean) => void;
+	onEditComplete?: () => void;
 }

@@ -112,7 +112,7 @@ const EditSong = ({ song, isOpen, onOpenChange, onEditComplete }: EditSongProps)
       if (error) throw error;
 
       const { data: signedUrlData } = await supabase.storage.from('audio').createSignedUrl(updatedSongData.audio_url, 3600);
-      const signedCoverUrlData = updatedSongData.cover_url ? await supabase.storage.from('audio').createSignedUrl(updatedSongData.cover_url, 3600) : { data: null };
+      const signedCoverUrlData = updatedSongData.cover_url ? await supabase.storage.from('cover').createSignedUrl(updatedSongData.cover_url, 3600) : { data: null };
 
       const transformedSong: Song = {
         id: updatedSongData.id,

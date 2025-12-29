@@ -7,14 +7,7 @@ import { createClient } from '@/lib/utils/supabase/supabase.client';
 import { useAuthStore } from '@/lib/stores/auth-store';
 import { toast } from 'sonner';
 import { useState, useEffect } from 'react';
-import { Playlist } from '@/types/interfaces';
-
-interface EditPlaylistProps {
-  playlist: Playlist | null;
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
-  onEditComplete?: () => void;
-}
+import { EditPlaylistProps } from '@/types/interfaces';
 
 const EditPlaylist = ({ playlist, isOpen, onOpenChange, onEditComplete }: EditPlaylistProps) => {
   const supabase = createClient();
