@@ -42,11 +42,13 @@ const Studio = () => {
       // Count plays per song
       const songCounts: { [key: string]: { song: any; count: number } } = {};
       historyData.forEach((item: any) => {
-        const songId = item.song_id;
-        if (songCounts[songId]) {
-          songCounts[songId].count += 1;
-        } else {
-          songCounts[songId] = { song: item.songs, count: 1 };
+        if (item.songs) {
+          const songId = item.song_id;
+          if (songCounts[songId]) {
+            songCounts[songId].count += 1;
+          } else {
+            songCounts[songId] = { song: item.songs, count: 1 };
+          }
         }
       });
 
