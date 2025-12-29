@@ -9,23 +9,16 @@ import { useAuthStore } from "@/lib/stores/auth-store";
 import { useMusicStore } from "@/lib/stores/music-store";
 import { toast } from "sonner";
 import { createClient } from "@/lib/utils/supabase/supabase.client";
-import { Song } from "@/types/interfaces";
-
-interface EditSongProps {
-  song: Song | null;
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
-  onEditComplete?: () => void;
-}
+import { EditSongProps, Song } from "@/types/interfaces";
 
 const EditSong = ({ song, isOpen, onOpenChange, onEditComplete }: EditSongProps) => {
   const supabase = createClient();
 
-  const [title, setTitle] = useState("");
-  const [artist, setArtist] = useState("");
+  const [title, setTitle] = useState<string>("");
+  const [artist, setArtist] = useState<string>("");
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [coverFile, setCoverFile] = useState<File | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
   const audioInputRef = useRef<HTMLInputElement>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
 
@@ -69,7 +62,11 @@ const EditSong = ({ song, isOpen, onOpenChange, onEditComplete }: EditSongProps)
     }
   };
 
-  const uploadFile = async (file: File, bucket: string, path: string) => {
+  const uploadFile = async (file: File, bucket: string, path: string): Promise<{
+    id: string;
+    path: string;
+    fullPath: string;
+  }> => {
     const { data, error } = await supabase.storage
       .from(bucket)
       .upload(path, file);
@@ -78,7 +75,7 @@ const EditSong = ({ song, isOpen, onOpenChange, onEditComplete }: EditSongProps)
     return data;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     if (!song || !title || !artist || !user) return;
 
