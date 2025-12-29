@@ -5,16 +5,30 @@ import { createClient } from '@/lib/utils/supabase/supabase.client';
 import { useAuthStore } from '@/lib/stores/auth-store';
 import { toast } from 'sonner';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { ListMusic, Trash2 } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { EllipsisIcon, InfoIcon, ListMusic, LucideEdit, Trash2 } from 'lucide-react';
 import { CreatePlaylistDrawer } from '@/components/widgets/CreatePlaylistDrawer';
 import { Playlist } from '@/types/interfaces';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import EditPlaylist from '@/components/widgets/EditPlaylist';
 
 export default function PlaylistsPage() {
   const supabase = createClient();
   const { user } = useAuthStore();
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [selectedPlaylistId, setSelectedPlaylistId] = useState<string | null>(null);
+  const [selectedPlaylist, setSelectedPlaylist] = useState<Playlist | null>(null);
+  const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
 
   const loadPlaylists = useCallback(async () => {
     if (!user) return;
@@ -51,6 +65,18 @@ export default function PlaylistsPage() {
       toast.success('Playlist deleted.');
       setPlaylists(playlists.filter(p => p.id !== playlistId));
     }
+    setIsDeleteDialogOpen(false);
+    setSelectedPlaylistId(null);
+  };
+
+  const openDeleteDialog = (playlistId: string) => {
+    setSelectedPlaylistId(playlistId);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const openEditDrawer = (playlist: Playlist) => {
+    setSelectedPlaylist(playlist);
+    setIsEditDrawerOpen(true);
   };
 
   return (
@@ -83,16 +109,54 @@ export default function PlaylistsPage() {
                 <CardContent>
                   <div className="flex items-center justify-between text-sm text-muted-foreground">
                     <div className='flex items-center'>
-                        <ListMusic className="w-4 h-4 mr-2"/>
-                        <span>0 songs</span>
+                      <ListMusic className="w-4 h-4 mr-2" />
+                      <span>{playlist.songs.length} songs</span>
                     </div>
-                    <Button 
-                        variant='ghost' 
-                        size='icon' 
-                        className='opacity-0 group-hover:opacity-100 transition-opacity' 
-                        onClick={() => handleDeletePlaylist(playlist.id)} >
-                        <Trash2 className='w-4 h-4'/>
-                    </Button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger className="outline-none cursor-pointer border shadow-xs flex items-center justify-center hover:bg-accent transition-all size-8">
+                        <EllipsisIcon className="w-4 h-4" />
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuLabel className="flex items-center gap-1">
+                          <span className="">{playlist.name}</span> <div className="mx-1 w-px h-5 bg-neutral-300"></div> <span className="font-normal">Playlist configuration</span>
+                        </DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem className="cursor-pointer">
+                          <span className="">
+                            Detail
+                          </span>
+                          <DropdownMenuShortcut>
+                            <InfoIcon className="w-4 h-4" />
+                          </DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          className="cursor-pointer"
+                          onClick={() => openEditDrawer(playlist)}
+                        // onClick={() => {
+                        //   setSelectedSong(song);
+                        //   setIsEditDrawerOpen(true);
+                        // }}
+                        >
+                          <span className="">
+                            Edit playlist
+                          </span>
+                          <DropdownMenuShortcut>
+                            <LucideEdit className="w-4 h-4" />
+                          </DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => openDeleteDialog(playlist.id)}
+                          className="cursor-pointer group-hover:text-red-600"
+                        >
+                          <span className="">
+                            Delete playlist
+                          </span>
+                          <DropdownMenuShortcut>
+                            <Trash2 className="w-4 h-4" />
+                          </DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
                 </CardContent>
               </Card>
@@ -100,6 +164,34 @@ export default function PlaylistsPage() {
           </div>
         )}
       </div>
+
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Are you absolutely sure to delete {playlists.find(p => p.id === selectedPlaylistId)?.name} playlist?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete your playlist and remove your data from our servers.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="hover:bg-red-700 transition-all"
+              onClick={() => selectedPlaylistId && handleDeletePlaylist(selectedPlaylistId)}
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      <EditPlaylist
+        playlist={selectedPlaylist}
+        isOpen={isEditDrawerOpen}
+        onOpenChange={setIsEditDrawerOpen}
+        onEditComplete={loadPlaylists}
+      />
     </section>
   );
 }

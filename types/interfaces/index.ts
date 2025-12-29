@@ -102,3 +102,17 @@ export type ButtonProps<T extends React.ElementType> = {
 	className?: string;
 	children: ReactNode;
 } & Omit<React.ComponentPropsWithoutRef<T>, 'as' | 'variant' | 'size' | 'className' | 'children'>;
+
+export interface EditSongProps {
+  song: Song | null;
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+  onEditComplete?: () => void;
+}
+
+export interface EditPlaylistProps {
+  playlist: Playlist | null;
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+  onEditComplete?: () => void;
+}

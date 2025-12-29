@@ -11,7 +11,7 @@ import { createClient } from "@/lib/utils/supabase/supabase.client";
 import { toast } from "sonner";
 import Image from "next/image";
 import { LoadPlaylistToDropdown, Song } from "@/types/interfaces";
-import { UploadMusicDrawer } from "@/components/widgets/UploadMusicDrawer"; // 1. Import komponen baru
+import { UploadMusicDrawer } from "@/components/widgets/UploadMusicDrawer";
 import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { VisibilityButton } from "@/lib/constants";
@@ -54,11 +54,14 @@ export default function SongsPage() {
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
   const [playlist, setPlaylist] = useState<LoadPlaylistToDropdown[] | null>([])
 
-  const loadPlaylists = async () => {
+  const loadPlaylists = useCallback(async () => {
+    if (!user) return;
+
     try {
       const { data: playlists, error } = await supabase
         .from("playlists")
-        .select("name, user_id");
+        .select("name, user_id")
+        .eq('user_id', user.id)
       
       if (error) {
         console.error(error);
@@ -71,11 +74,7 @@ export default function SongsPage() {
       console.error(err);
       toast.error("Failed to load playlists");
     }
-  }
-
-  useEffect(() => {
-    loadPlaylists();
-  });
+  }, [user, supabase]);
 
   const loadSongs = useCallback(async () => {
     if (!user) return;
@@ -121,8 +120,9 @@ export default function SongsPage() {
   useEffect(() => {
     if (user) {
       loadSongs();
+      loadPlaylists();
     }
-  }, [user, loadSongs]);
+  }, [user, loadSongs, loadPlaylists]);
 
   const handleDeleteSong = async (songId: string) => {
     try {
