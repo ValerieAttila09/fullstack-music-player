@@ -5,6 +5,8 @@ export default defineConfig({
   out: './lib/drizzle/migrations',
   dialect: 'postgresql',
   dbCredentials: {
-    url: process.env.SUPABASE_DATABASE_URL!,
+    url: process.env.SUPABASE_DATABASE_URL || (() => {
+      throw new Error('SUPABASE_DATABASE_URL environment variable is required');
+    })(),
   },
 });
