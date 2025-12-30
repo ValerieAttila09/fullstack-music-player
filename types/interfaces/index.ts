@@ -91,6 +91,7 @@ export interface StepProps {
 }
 
 export interface LoadPlaylistToDropdown {
+	id: string;
 	name: string;
 	user_id: string;
 }
@@ -104,10 +105,10 @@ export type ButtonProps<T extends React.ElementType> = {
 } & Omit<React.ComponentPropsWithoutRef<T>, 'as' | 'variant' | 'size' | 'className' | 'children'>;
 
 export interface EditSongProps {
-  song: Song | null;
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
-  onEditComplete?: () => void;
+	song: Song | null;
+	isOpen: boolean;
+	onOpenChange: (open: boolean) => void;
+	onEditComplete?: () => void;
 }
 
 export interface EditPlaylistProps {

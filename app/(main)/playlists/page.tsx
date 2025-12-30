@@ -17,12 +17,14 @@ import {
 import { EllipsisIcon, InfoIcon, ListMusic, LucideEdit, Trash2 } from 'lucide-react';
 import { CreatePlaylistDrawer } from '@/components/widgets/CreatePlaylistDrawer';
 import { Playlist } from '@/types/interfaces';
+import { useRouter } from 'next/navigation';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import EditPlaylist from '@/components/widgets/EditPlaylist';
 
 export default function PlaylistsPage() {
   const supabase = createClient();
   const { user } = useAuthStore();
+  const router = useRouter();
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [loading, setLoading] = useState(true);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -102,7 +104,11 @@ export default function PlaylistsPage() {
         ) : (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {playlists.map((playlist) => (
-              <Card key={playlist.id} className="group relative">
+              <Card
+                key={playlist.id}
+                className="group relative hover:shadow-lg transition-all cursor-pointer"
+                onClick={() => router.push(`/playlists/${playlist.id}`)}
+              >
                 <CardHeader>
                   <CardTitle className="truncate">{playlist.name}</CardTitle>
                 </CardHeader>
@@ -113,7 +119,10 @@ export default function PlaylistsPage() {
                       <span>{playlist.songs.length} songs</span>
                     </div>
                     <DropdownMenu>
-                      <DropdownMenuTrigger className="outline-none cursor-pointer border shadow-xs flex items-center justify-center hover:bg-accent transition-all size-8">
+                      <DropdownMenuTrigger
+                        className="outline-none cursor-pointer border shadow-xs flex items-center justify-center hover:bg-accent transition-all size-8"
+                        onClick={(e) => e.stopPropagation()}
+                      >
                         <EllipsisIcon className="w-4 h-4" />
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
@@ -132,10 +141,6 @@ export default function PlaylistsPage() {
                         <DropdownMenuItem
                           className="cursor-pointer"
                           onClick={() => openEditDrawer(playlist)}
-                        // onClick={() => {
-                        //   setSelectedSong(song);
-                        //   setIsEditDrawerOpen(true);
-                        // }}
                         >
                           <span className="">
                             Edit playlist

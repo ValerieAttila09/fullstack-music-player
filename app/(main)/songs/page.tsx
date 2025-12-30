@@ -11,7 +11,7 @@ import { createClient } from "@/lib/utils/supabase/supabase.client";
 import { toast } from "sonner";
 import Image from "next/image";
 import { LoadPlaylistToDropdown, Song } from "@/types/interfaces";
-import { UploadMusicDrawer } from "@/components/widgets/UploadMusicDrawer";
+import { CreatePlaylistDrawer } from '@/components/widgets/CreatePlaylistDrawer';
 import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { VisibilityButton } from "@/lib/constants";
@@ -41,6 +41,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import EditSong from "@/components/widgets/EditSong";
+import { UploadMusicDrawer } from "@/components/widgets/UploadMusicDrawer";
 
 export default function SongsPage() {
 
@@ -53,6 +54,7 @@ export default function SongsPage() {
   const [selectedSong, setSelectedSong] = useState<Song | null>(null);
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
   const [playlist, setPlaylist] = useState<LoadPlaylistToDropdown[] | null>([])
+  const [isCreatePlaylistOpen, setIsCreatePlaylistOpen] = useState(false);
 
   const loadPlaylists = useCallback(async () => {
     if (!user) return;
@@ -60,7 +62,7 @@ export default function SongsPage() {
     try {
       const { data: playlists, error } = await supabase
         .from("playlists")
-        .select("name, user_id")
+        .select("id, name, user_id")
         .eq('user_id', user.id)
 
       if (error) {
@@ -142,6 +144,28 @@ export default function SongsPage() {
     } catch (error) {
       console.error(error);
       toast.error("Failed to delete song");
+    }
+  };
+
+  const handleAddToPlaylist = async (songId: string, playlistId: string) => {
+    try {
+      const { error } = await supabase
+        .from('playlist_songs')
+        .insert({
+          playlist_id: playlistId,
+          song_id: songId,
+        });
+
+      if (error) {
+        console.error('Error adding song to playlist:', error);
+        toast.error('Failed to add song to playlist');
+        return;
+      }
+
+      toast.success('Song added to playlist!');
+    } catch (error) {
+      console.error('Error adding song to playlist:', error);
+      toast.error('Failed to add song to playlist');
     }
   };
 
@@ -242,11 +266,18 @@ export default function SongsPage() {
                                 <DropdownMenuSubContent>
                                   {playlist?.map((playlistData, i) => {
                                     return (
-                                      <DropdownMenuItem key={i}>{playlistData.name}</DropdownMenuItem>
+                                      <DropdownMenuItem
+                                        key={i}
+                                        onClick={() => handleAddToPlaylist(song.id, playlistData.id)}
+                                      >
+                                        {playlistData.name}
+                                      </DropdownMenuItem>
                                     );
                                   })}
                                   <DropdownMenuSeparator />
-                                  <DropdownMenuItem>Create new playlist...</DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => setIsCreatePlaylistOpen(true)}>
+                                    Create new playlist...
+                                  </DropdownMenuItem>
                                 </DropdownMenuSubContent>
                               </DropdownMenuPortal>
                             </DropdownMenuSub>
@@ -329,6 +360,14 @@ export default function SongsPage() {
         isOpen={isEditDrawerOpen}
         onOpenChange={setIsEditDrawerOpen}
         onEditComplete={loadSongs}
+      />
+      <CreatePlaylistDrawer
+        isOpen={isCreatePlaylistOpen}
+        onOpenChange={setIsCreatePlaylistOpen}
+        onCreateComplete={() => {
+          loadPlaylists();
+          setIsCreatePlaylistOpen(false);
+        }}
       />
     </section>
   );
