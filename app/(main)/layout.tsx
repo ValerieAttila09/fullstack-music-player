@@ -1,9 +1,9 @@
 "use client";
 
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
-import AppSidebar from "@/components/widgets/AppSidebar";
 import React from "react";
 import { MusicPlayer } from "@/components/MusicPlayer";
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import AppSidebar from "@/components/widgets/AppSidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import NavbarMobile from "@/components/widgets/NavbarMobile";
 
