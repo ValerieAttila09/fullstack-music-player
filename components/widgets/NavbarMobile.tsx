@@ -29,14 +29,13 @@ const NavbarMobile = () => {
   return (
     <div className="bg-background fixed top-0 w-full z-50 p-2 border-b border-accent">
       <div className="w-full flex items-center justify-between">
-        <SidebarTrigger />
+        <SidebarTrigger/>
         <Link href={'/profile'} className="flex items-center gap-1">
           <Avatar>
             <AvatarImage src={user?.avatarUrl} />
             <AvatarFallback>{user?.email?.[0].toUpperCase()}</AvatarFallback>
           </Avatar>
           <span className="text-foreground text-md font-medium">{user?.fullName}</span>
-
         </Link>
       </div>
     </div>

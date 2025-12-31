@@ -227,7 +227,7 @@ const Page = ({
 
         <div className="space-y-4">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center">
+            <div className="w-16 h-16 bg-primary/10 flex items-center justify-center">
               <Music className="w-8 h-8 text-primary" />
             </div>
             <div>
@@ -260,16 +260,16 @@ const Page = ({
                           alt={song.title}
                           width={79}
                           height={79}
-                          className="object-cover rounded"
+                          className="object-cover"
                         />
                       ) : (
-                        <div className="w-[79px] h-[79px] bg-muted flex items-center justify-center border border-neutral-200 rounded">
+                        <div className="w-[79px] h-[79px] bg-muted flex items-center justify-center border border-neutral-200">
                           <span className="text-2xl">🎵</span>
                         </div>
                       )}
                       <Button
                         size="sm"
-                        className="absolute inset-0 w-full h-full opacity-0 group-hover:opacity-100 transition-opacity rounded"
+                        className="absolute inset-0 w-full h-full opacity-0 group-hover:opacity-100 transition-opacity"
                         onClick={() => handlePlaySong(song)}
                       >
                         {currentSong?.id === song.id && isPlaying ? (
