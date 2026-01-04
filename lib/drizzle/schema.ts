@@ -39,3 +39,25 @@ export const listeningHistory = pgTable('listening_history', {
   songId: uuid('song_id').notNull().references(() => songs.id, { onDelete: 'cascade' }),
   playedAt: timestamp('played_at').defaultNow(),
 });
+
+export const activityHistory = pgTable('activity_history', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  action: text('action').notNull(),
+  targetId: uuid('target_id'),
+  targetType: text('target_type'),
+  metadata: text('metadata'),
+  createdAt: timestamp('created_at').defaultNow(),
+});
+
+export const listeningTime = pgTable('listening_time', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  duration: bigint('duration', { mode: 'number' }).notNull(),
+  songId: uuid('song_id').references(() => songs.id, { onDelete: 'set null' }),
+  createdAt: timestamp('created_at').defaultNow(),
+});

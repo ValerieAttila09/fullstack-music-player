@@ -1,14 +1,20 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { MusicPlayer } from "@/components/MusicPlayer";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/widgets/AppSidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import NavbarMobile from "@/components/widgets/NavbarMobile";
+import { useAuthStore } from "@/lib/stores/auth-store";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const isMobile = useIsMobile();
+  const { initialize } = useAuthStore();
+
+  useEffect(() => {
+    initialize();
+  }, [initialize]);
 
   return (
     <SidebarProvider defaultOpen={!isMobile}>

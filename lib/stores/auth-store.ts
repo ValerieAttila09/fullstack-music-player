@@ -10,7 +10,6 @@ export const useAuthStore = create<AuthState>()(
       isLoading: true,
       setUser: (user: User | null) => set({ user }),
       setLoading: (loading: boolean) => set({ isLoading: loading }),
-      // Fungsi baru untuk membersihkan state saja
       clearAuth: () => set({ user: null, isLoading: false }),
       logout: async () => {
         await authClient.signOut();
@@ -31,7 +30,6 @@ export const useAuthStore = create<AuthState>()(
           avatarUrl: supabaseUser?.user_metadata?.avatar_url,
         });
 
-        // Check initial session
         authClient.getSession().then(({ data }) => {
           if (data?.user) {
             set({ user: mapUser(data.user) });
