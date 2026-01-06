@@ -7,6 +7,7 @@ import AppSidebar from "@/components/widgets/AppSidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import NavbarMobile from "@/components/widgets/NavbarMobile";
 import { useAuthStore } from "@/lib/stores/auth-store";
+import { ThemeProvider } from "next-themes";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const isMobile = useIsMobile();
@@ -17,18 +18,25 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   }, [initialize]);
 
   return (
-    <SidebarProvider defaultOpen={!isMobile}>
-      <AppSidebar />
-      {isMobile && <NavbarMobile />}
-      <SidebarInset>
-        <main className="min-h-screen w-full relative">
-          <div className={`${isMobile ? "pt-14" : ""} pb-32 relative overflow-hidden`}>
-            {children}
-          </div>
-          <MusicPlayer />
-        </main>
-      </SidebarInset>
-    </SidebarProvider>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
+    >
+      <SidebarProvider defaultOpen={!isMobile}>
+        <AppSidebar />
+        {isMobile && <NavbarMobile />}
+        <SidebarInset>
+          <main className="min-h-screen w-full relative">
+            <div className={`${isMobile ? "pt-14" : ""} pb-32 relative overflow-hidden`}>
+              {children}
+            </div>
+            <MusicPlayer />
+          </main>
+        </SidebarInset>
+      </SidebarProvider>
+    </ThemeProvider>
   );
 }
 
