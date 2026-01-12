@@ -24,18 +24,18 @@ const AppSidebar = () => {
   console.log(pathname);
   return (
     <Sidebar>
-      <SidebarHeader className='bg-neutral-800 p-10 text-white'>
+      <SidebarHeader className='bg-neutral-950 p-10 text-white'>
         <h1 className="text-4xl outfit-semibold">Music</h1>
         <h3 className="text-xl text-neutral-100 outfit-regular">listen & relax with music</h3>
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className='dark:bg-neutral-900'>
         <SidebarGroup>
           <SidebarGroupLabel>MENU</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {StudioSidebarMenu.map((menu: StudioSidebarMenu) => {
                 const SidebarIcon = menu.icon;
-                const buttonActiveClass = pathname.includes(menu.url) ? 'bg-neutral-800 text-white group hover:text-neutral-200 hover:bg-neutral-700 transition-all' : '';
+                const buttonActiveClass = pathname.includes(menu.url) ? 'bg-neutral-900 text-white group hover:text-neutral-200 hover:bg-neutral-700 transition-all' : '';
                 const iconAtiveClass = pathname.includes(menu.url) ? 'text-white hover:text-neutral-400 transition-all' : '';
                 return (
                   <SidebarMenuItem key={menu.title}>
@@ -52,8 +52,8 @@ const AppSidebar = () => {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarSeparator />
-      <SidebarFooter>
+      <SidebarSeparator className='dark:bg-neutral-700'/>
+      <SidebarFooter className='dark:bg-neutral-900'>
         <SidebarContent>
           <SidebarGroup>
             <SidebarGroupContent>
@@ -61,7 +61,7 @@ const AppSidebar = () => {
                 <SidebarMenuItem>
                   <SidebarMenuButton className='' asChild size={'lg'}>
                     <Link href={"/profile"}>
-                      <User2Icon className='w-6 h-6 text-neutral-800'/>
+                      <User2Icon className='w-6 h-6 text-neutral-900 dark:text-white'/>
                       <span className="text-lg font-normal">Profile</span>
                     </Link>
                   </SidebarMenuButton>

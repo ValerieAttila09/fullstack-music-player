@@ -106,7 +106,7 @@ const Studio = () => {
       <section className="w-full flex flex-col md:flex-row">
         {/* Recently Listened Section */}
         <div className="w-full md:grow p-4 sm:p-6 space-y-4">
-          <h1 className="text-3xl md:text-4xl font-medium text-neutral-900">
+          <h1 className="text-3xl md:text-4xl font-medium text-neutral-900 dark:text-white">
             Your Top Songs
           </h1>
           {loading ? (
@@ -116,7 +116,7 @@ const Studio = () => {
           ) : (
             <div className="w-full grid gap-4">
               {topSongs.map((song, i) => (
-                <div key={song.id} className="w-full flex items-center gap-3 p-2 hover:bg-neutral-100 transition-colors">
+                <div key={song.id} className="w-full flex items-center gap-3 p-2 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors">
                   <div className="flex items-center justify-center w-8">
                     <h1 className="text-lg text-neutral-500 font-medium">
                       {i + 1}
@@ -133,10 +133,10 @@ const Studio = () => {
                     ) : null}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h1 className="text-md md:text-lg font-medium text-neutral-800 truncate">
+                    <h1 className="text-md md:text-lg font-medium text-neutral-800 truncate dark:text-white">
                       {song.title}
                     </h1>
-                    <h3 className="text-sm text-neutral-600 font-regular truncate">
+                    <h3 className="text-sm text-neutral-600 font-regular truncate dark:text-neutral-500">
                       {song.artist}
                     </h3>
                   </div>
