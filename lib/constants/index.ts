@@ -35,3 +35,10 @@ export const navLinks: SidebarMenuLinks[] = [
   { name: "Favorites", href: "/favorites", icon: Heart },
   { name: "Playlists", href: "/playlists", icon: ListMusic }
 ];
+
+export const landingPageNavMenu: LandingPageNavMenu[] = [
+  { label: "HOME", href: "/#home" },
+  { label: "ABOUT US", href: "/#about" },
+  { label: "DOCS", href: "/#docs" },
+  { label: "SERVICES", href: "/#services" },
+];
