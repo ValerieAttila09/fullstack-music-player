@@ -1,10 +1,19 @@
 import type { Metadata } from "next";
-import { Outfit } from "next/font/google";
+import { Outfit, Google_Sans, Quantico } from "next/font/google";
 import "./globals.css";
 import "./styles.css";
 import { Toaster } from "@/components/ui/sonner";
 
 const outfit = Outfit({
+  subsets: ['latin']
+});
+
+const quantico = Quantico({
+  weight: "400",
+  subsets: ['latin']
+});
+
+const googleSans = Google_Sans({
   subsets: ['latin']
 });
 
@@ -21,9 +30,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${outfit.className} antialiased`}
+        className={`${quantico.className} antialiased`}
       >
         <main>
+          
           {children}
         </main>
         <Toaster />

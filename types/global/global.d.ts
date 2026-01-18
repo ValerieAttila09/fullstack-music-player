@@ -78,6 +78,11 @@ declare global {
     className?: string;
     children: ReactNode;
   } & Omit<React.ComponentPropsWithoutRef<T>, 'as' | 'variant' | 'size' | 'className'>;
+
+  type LandingPageNavMenu = {
+    label: string;
+    href: string;
+  }
 };
 
 export { };
