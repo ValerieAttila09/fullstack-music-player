@@ -37,8 +37,8 @@ export const navLinks: SidebarMenuLinks[] = [
 ];
 
 export const landingPageNavMenu: LandingPageNavMenu[] = [
-  { label: "HOME", href: "/" },
-  { label: "ABOUT US", href: "/" },
-  { label: "DOCS", href: "/" },
-  { label: "SERVICES", href: "/" },
+  { label: "HOME", href: "/#home" },
+  { label: "ABOUT US", href: "/#about" },
+  { label: "DOCS", href: "/#docs" },
+  { label: "SERVICES", href: "/#services" },
 ];

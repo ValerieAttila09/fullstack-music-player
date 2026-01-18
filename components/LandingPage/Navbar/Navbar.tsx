@@ -7,7 +7,12 @@ const Navbar = () => {
   return (
     <nav className="w-full flex items-center justify-between">
       <div className="">
-        <Button variant={'ghost'} className='relative flex justify-center items-center overflow-hidden w-14'>
+        <Button
+          type="button"
+          aria-label="Open navigation menu"
+          variant={'ghost'}
+          className='relative flex justify-center items-center overflow-hidden w-14'
+        >
           <span className="flex flex-col space-y-1">
             <span className="w-8 h-px bg-black" />
             <span className="w-7 h-px bg-black" />
